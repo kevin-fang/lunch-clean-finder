@@ -7,12 +7,22 @@ var cors = require('cors')
 var config = require('./config.json')
 var api = require('./api.js')
 
+// convert any format text to a name
+// kevin FAng => Kevin Fang
+String.prototype.nameify = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}
+
+// allow cross origin research sharing - so it works with a react frontend
 app.use(cors())
+
+// return the team working today
 app.get('/today', (req, res) => {
     console.log("Request for today")
     res.setHeader('Content-Type', 'text/json')
 })
 
+// return the days for a specific team
 app.get('/team/:team', (req, res) => {
     console.log("Request for team: " + req.params.team.toUpperCase())
     res.setHeader('Content-Type', 'text/json')
@@ -22,11 +32,16 @@ app.get('/team/:team', (req, res) => {
     res.send(JSON.stringify(toReturn))
 })
 
+// return the job days for a specific person
 app.get('/name/:first/:last', (req, res) => {
-    console.log("Request for name: " + req.params.first + " " + req.params.last)
+    console.log("Request for name: " + req.params.first.nameify() + " " + req.params.last.nameify())
     res.setHeader('Content-Type', 'text/json')
-    api.getByName(auth, {first: req.params.first, last: req.params.last})
-        .then(console.log, console.error)
+    api.getByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
+        .then((response) => {
+        })
+        .catch((err) => {
+            console.log(err)
+        })
 })
 
 var auth = null;

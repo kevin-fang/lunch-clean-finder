@@ -2,10 +2,11 @@ var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
+var config = require('./config.json')
 
-var SPREADSHEET_ID = "1Ujq4IZB3-MzOEEN4KdjANw8TZ2sUOOkeZZp8XRNzM5g"
+var SPREADSHEET_ID = config.spreadsheetId
 var TOKEN_DIR = './credentials/'
-var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
+var TOKEN_PATH = TOKEN_DIR + 'lunch-clean-finder-token.json';
 
 var sheets = google.sheets('v4')
 
@@ -16,7 +17,6 @@ module.exports = {
 	getByName: getByName
 }
 
-/*
 function getToday(auth) {
 	return new Promise((resolve, reject) => {
 		sheets.spreadsheets.values.get({
@@ -24,14 +24,10 @@ function getToday(auth) {
 			spreadsheetId: SPREADSHEET_ID,
 			range: ""
 		}, (err, response) => {
-			
+			if (err) reject(err);
+			resolve(response)
 		})
 	})
-}
-*/
-
-function getToday() {
-
 }
 
 function getByTeam() {
@@ -46,11 +42,20 @@ function getByName(auth, name) {
 			range: 'Job Assignments (by Name)!A:E'
 		}, (err, response) => {
 			if (err) return reject(err)
-			resolve(response)
+			response.values.filter((value, index, arr) => {
+				return (value[1] === name.first && value[0] === name.last)
+			}).map((value) => {
+				resolve(value)
+			})
+			
 		})
 	})
 }
 
+/**
+ * 
+ * @param {function(err, oauth)} callback (err, OAuthkey) The callback to run after authorization
+ */
 function verifyOauth(callback) {
 	fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 		if (err) {

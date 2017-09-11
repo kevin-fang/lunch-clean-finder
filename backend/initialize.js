@@ -3,11 +3,12 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var opn = require('opn');
+var config = require('./config.json')
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-var TOKEN_DIR = './credentials/'
+var TOKEN_DIR = config.tokenDir
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
 // Load client secrets from a local file.
@@ -18,7 +19,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 	}
 	// Authorize a client with the loaded credentials, then call the
 	// Google Sheets API.
-	authorize(JSON.parse(content));
+	authorize(JSON.parse(content))
 });
 
 /**
