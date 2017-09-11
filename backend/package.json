@@ -1,0 +1,15 @@
+{
+  "name": "lunch-clean-finder-backend",
+  "version": "1.0.0",
+  "description": "Backend for lunch clean finder",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node run.js"
+  },
+  "author": "Kevin Fang",
+  "license": "MIT",
+  "dependencies": {
+    "opn": "^5.1.0"
+  }
+}
