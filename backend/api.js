@@ -3,38 +3,94 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var config = require('./config.json')
+require('./util.js')
 
 var SPREADSHEET_ID = config.spreadsheetId
-var TOKEN_DIR = './credentials/'
-var TOKEN_PATH = TOKEN_DIR + 'lunch-clean-finder-token.json';
+var TOKEN_DIR = config.tokenDir
+var TOKEN_PATH = TOKEN_DIR + config.tokenName
 
 var sheets = google.sheets('v4')
 
 module.exports = {
 	verifyOauth: verifyOauth,
-	getToday: getToday,
+	getByDate: getByDate,
 	getByTeam: getByTeam,
+	getJobByName: getJobByName,
 	getByName: getByName
 }
 
-function getToday(auth) {
+// turn a person row into an object
+function objectifyPersonRow(row) {
+	return {
+		firstName: row[1],
+		lastName: row[0],
+		day: row[2],
+		job: row[3],
+		team: row[4]
+	}
+}
+
+// turn a name row into an object
+const objectifyTeamRow = (row) => {
+	return {
+		date: row[0],
+		weekday: row[1],
+		notes: row[2],
+		team: row[3]
+	}
+}
+
+// TODO: get the days that a person is working
+function getByName(auth) {
 	return new Promise((resolve, reject) => {
 		sheets.spreadsheets.values.get({
 			auth: auth,
 			spreadsheetId: SPREADSHEET_ID,
-			range: ""
+			range: "" 
 		}, (err, response) => {
-			if (err) reject(err);
-			resolve(response)
+
 		})
 	})
 }
 
+/** Get the job by a date - FINISHED
+ * 
+ * @param {any} auth 
+ * @param {Date} date 
+ */
+function getByDate(auth, date) {
+	date = date.withoutTime()
+	return new Promise((resolve, reject) => {
+		sheets.spreadsheets.values.get({
+			auth: auth,
+			spreadsheetId: SPREADSHEET_ID,
+			range: "Lunch Cleanup Schedule!A:D"
+		}, (err, response) => {
+			if (err) reject(err);
+			response.values.filter((row) => {
+				return row[0] !== "DATE"
+			}).filter((row) => {
+				return date.valueOf() === new Date(row[0]).withoutTime().valueOf()
+			})
+			.map((row) => {
+				return objectifyTeamRow(row)
+			})
+			.map((row) => {
+				resolve(row)
+			})
+			
+			reject("Date not found: " + date.valueOf())
+		})
+	})
+}
+
+// TODO: get the days for a specific team
 function getByTeam() {
 
 }
 
-function getByName(auth, name) {
+// Get job for a specific person
+function getJobByName(auth, name) {
 	return new Promise((resolve, reject) => {
 		sheets.spreadsheets.values.get({
 			auth: auth,
@@ -42,12 +98,16 @@ function getByName(auth, name) {
 			range: 'Job Assignments (by Name)!A:E'
 		}, (err, response) => {
 			if (err) return reject(err)
-			response.values.filter((value, index, arr) => {
-				return (value[1] === name.first && value[0] === name.last)
-			}).map((value) => {
-				resolve(value)
+			response.values.filter((row) => {
+				return (row[1] === name.first && row[0] === name.last)
 			})
-			
+			.map((row) => {
+				return objectifyPersonRow(row)
+			})
+			.map((row) => {
+				resolve(row)
+			})
+			reject("Person not found: " + name.first + " " + name.last)
 		})
 	})
 }

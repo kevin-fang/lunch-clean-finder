@@ -6,23 +6,27 @@ var app = require('express')()
 var cors = require('cors')
 var config = require('./config.json')
 var api = require('./api.js')
-
-// convert any format text to a name
-// kevin FAng => Kevin Fang
-String.prototype.nameify = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
-}
+require('./util.js')
 
 // allow cross origin research sharing - so it works with a react frontend
 app.use(cors())
 
-// return the team working today
+// TODO: return the team working today
 app.get('/today', (req, res) => {
     console.log("Request for today")
     res.setHeader('Content-Type', 'text/json')
+    var today = new Date()
+    api.getByDate(auth, today)
+    .then((response) => {
+        res.send(JSON.stringify(response))
+    })
+    .catch((err) => {
+        res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
+        console.log(err)
+    })
 })
 
-// return the days for a specific team
+// TODO: return the days for a specific team
 app.get('/team/:team', (req, res) => {
     console.log("Request for team: " + req.params.team.toUpperCase())
     res.setHeader('Content-Type', 'text/json')
@@ -32,18 +36,20 @@ app.get('/team/:team', (req, res) => {
     res.send(JSON.stringify(toReturn))
 })
 
-// return the job days for a specific person
+// return the job days for a specific person - FINISHED
 app.get('/name/:first/:last', (req, res) => {
-    console.log("Request for name: " + req.params.first.nameify() + " " + req.params.last.nameify())
     res.setHeader('Content-Type', 'text/json')
-    api.getByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
+    api.getJobByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
         .then((response) => {
+            res.send(JSON.stringify(response))
         })
         .catch((err) => {
+            res.send(JSON.stringify({error: "Name not found"}))
             console.log(err)
         })
 })
 
+// get an authorization key from Google OAuth
 var auth = null;
 api.verifyOauth((err, authKey) => {
     if (err) {

@@ -10,6 +10,9 @@
   "author": "Kevin Fang",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.4",
+    "google-auth-library": "^0.11.0",
+    "googleapis": "^21.3.0",
     "opn": "^5.1.0"
   }
 }

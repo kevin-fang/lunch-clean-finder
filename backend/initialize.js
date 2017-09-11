@@ -4,12 +4,13 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var opn = require('opn');
 var config = require('./config.json')
+require('./util.js')
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 var TOKEN_DIR = config.tokenDir
-var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
+var TOKEN_PATH = TOKEN_DIR + config.tokenName
 
 // Load client secrets from a local file.
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
@@ -66,7 +67,7 @@ function getNewToken(oauth2Client) {
 		input: process.stdin,
 		output: process.stdout
 	});
-	rl.question('Enter the code from the page just opened here: ', function(code) {
+	rl.question('Log into the Google Account in the page just opened and enter the code from the page just opened here: ', function(code) {
 		rl.close();
 		oauth2Client.getToken(code, function(err, token) {
 			if (err) {
