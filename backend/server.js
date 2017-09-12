@@ -13,18 +13,20 @@ require('./util.js')
 // allow cross origin research sharing - so it works with a react frontend
 app.use(cors())
 
+function log(msg) {
+    return "[" + new Date().toISOString() + "]" + " " + msg
+}
+
 /**
  * return the team working today
  */
 app.get('/today', (req, res) => {
-    console.log("[" + new Date().toISOString() + "]" + " request for today")
+    log("Request for today")
     res.setHeader('Content-Type', 'text/json')
     var today = new Date()
-    api.getByDate(auth, today)
-    .then((response) => {
+    api.getByDate(auth, today).then((response) => {
         res.send(JSON.stringify(response[0]))
-    })
-    .catch((err) => {
+    }).catch((err) => {
         res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
         console.log(err)
     })
@@ -32,13 +34,11 @@ app.get('/today', (req, res) => {
 
 // TODO: return the days for a specific team
 app.get('/team/:team', (req, res) => {
-    console.log("Request for team: " + req.params.team)
+    log("Request for team: " + req.params.team)
     res.setHeader('Content-Type', 'text/json')
-    api.getByTeam(auth, req.params.team)
-    .then((response) => {
+    api.getByTeam(auth, req.params.team).then((response) => {
         res.send(JSON.stringify(response))
-    })
-    .catch((err) => {
+    }).catch((err) => {
         res.send(JSON.stringify({error: "Team not found", request: req.params.team}))
     })
 })
@@ -66,7 +66,8 @@ app.get('/name/:first/:last', (req, res) => {
 })
 
 // return the job days for a specific person - FINISHED
-app.get('/getJob/:first/:last', (req, res) => {
+app.get('/jobbyname/:first/:last', (req, res) => {
+    log("Request for job name")
     res.setHeader('Content-Type', 'text/json')
     api.getJobByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
         .then((response) => {
@@ -94,12 +95,13 @@ api.verifyOauth((err, authKey) => {
         console.log(err)
         process.exit()
     }
-    console.log("Successfully loaded OAuth. Starting server...")
+    log("Successfully loaded OAuth. Starting server...")
     auth = authKey;
     startServer()
 })
 
+// start server on config port
 function startServer() {
     app.listen(config.port)
-    console.log("Server listening on port: " + config.port)
+    log("Server listening on port: " + config.port)
 }

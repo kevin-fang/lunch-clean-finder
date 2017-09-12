@@ -47,6 +47,7 @@ const objectifyTeamRow = (row) => {
 function getByName(auth, name) {
 	return new Promise((resolve, reject) => {
 		getJobByName(auth, name).then((response) => {
+			console.log(response)
 			getByTeam(auth, response.team).then((response) => {
 				resolve(response)
 			}).catch((err) => {
@@ -146,7 +147,7 @@ function getJobByName(auth, name) {
 				return objectifyPersonRow(row)
 			})
 			if (job !== null) {
-				resolve(job)
+				resolve(job[0])
 			} else {
 				reject("Person not found: " + name.first + " " + name.last)
 			}

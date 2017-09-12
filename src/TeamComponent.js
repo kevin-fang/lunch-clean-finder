@@ -1,10 +1,14 @@
 import React from 'react'
 
-export const TeamFormComponent = () => (
-    <div>
-        Team Form Component
-    </div>
-)
+export class TeamFormComponent extends React.Component() {
+    render() {
+        return (
+            <div>
+                Team Form Component
+            </div>
+        )
+    }
+}
 
 export const TeamDisplayComponent = (props) => {
     var team = props.match.params.teamname.slice(0, 1).toUpperCase()

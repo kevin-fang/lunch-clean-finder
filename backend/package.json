@@ -4,7 +4,7 @@
   "description": "Backend for lunch clean finder",
   "main": "run.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node testServer.js",
     "start": "node server.js"
   },
   "author": "Kevin Fang",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getToday } from './Api.js'
+import { GetToday } from './Api.js'
 
 export default class TodayComponent extends React.Component {
 
@@ -11,7 +11,7 @@ export default class TodayComponent extends React.Component {
     }
 
     componentDidMount() {
-        getToday((response, err) => {
+        GetToday((response, err) => {
             if (err) {
                 console.log(err)
                 alert(err)
