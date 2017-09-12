@@ -18,7 +18,7 @@ app.get('/today', (req, res) => {
     var today = new Date()
     api.getByDate(auth, today)
     .then((response) => {
-        res.send(JSON.stringify(response))
+        res.send(JSON.stringify(response[0]))
     })
     .catch((err) => {
         res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
