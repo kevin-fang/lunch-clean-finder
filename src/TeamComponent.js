@@ -1,6 +1,6 @@
 import React from 'react'
 
-export class TeamFormComponent extends React.Component() {
+export class TeamFormComponent extends React.Component {
     render() {
         return (
             <div>

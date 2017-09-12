@@ -48,14 +48,17 @@ function getByName(auth, name) {
 	return new Promise((resolve, reject) => {
 		getJobByName(auth, name).then((response) => {
 			console.log(response)
-			getByTeam(auth, response.team).then((response) => {
-				resolve(response)
-			}).catch((err) => {
-				console.log(err)
-				reject("Team not found? This should never happen. Please contact Kevin Fang on GitHub.")
+			if (response === undefined || response === null) {
+				reject("Person not found")
+			} else {
+				getByTeam(auth, response.team).then((response) => {
+					resolve(response)
+				}).catch((err) => {
+					console.log(err)
+					reject("Team not found? This should never happen. Please contact Kevin Fang on GitHub.")
 			})
-		})
-		.catch((err) => {
+			}
+		}).catch((err) => {
 			console.log(err)
 			reject("Name not found")
 		})

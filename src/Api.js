@@ -21,7 +21,7 @@ export const GetDatesByName = (nameObject, callback) => {
         })
         .catch(err => {
             console.error(err)
-            callback(null, error)
+            callback(null, err)
         })
 }
 
