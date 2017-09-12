@@ -1,9 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import { getToday } from './Api.js'
 
-var config = require('./config.json')
-
-export class TodayDisplayComponent extends React.Component {
+export default class TodayComponent extends React.Component {
 
     constructor(props) {
         super(props)
@@ -13,15 +11,20 @@ export class TodayDisplayComponent extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(config.serverip + '/today')
-            .then((response) => {
+        getToday((response, err) => {
+            if (err) {
+                console.log(err)
+                alert(err)
+            }
+            if (response) {
                 this.setState({today: response.data})
-            })
+            }
+        })
     }
 
     render() {
         return (
-            <div style={{margin: 24}}>
+            <div>
                 { this.state.today 
                     ? <div>
                     Today's date: {this.state.today.date} <br/>

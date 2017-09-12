@@ -46,10 +46,8 @@ const objectifyTeamRow = (row) => {
  */
 function getByName(auth, name) {
 	return new Promise((resolve, reject) => {
-		getJobByName(auth, name)
-		.then((response) => {
-			getByTeam(auth, response.team)
-			.then((response) => {
+		getJobByName(auth, name).then((response) => {
+			getByTeam(auth, response.team).then((response) => {
 				resolve(response)
 			}).catch((err) => {
 				console.log(err)

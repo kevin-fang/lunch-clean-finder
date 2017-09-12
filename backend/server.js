@@ -13,7 +13,9 @@ require('./util.js')
 // allow cross origin research sharing - so it works with a react frontend
 app.use(cors())
 
-// TODO: return the team working today
+/**
+ * return the team working today
+ */
 app.get('/today', (req, res) => {
     console.log("[" + new Date().toISOString() + "]" + " request for today")
     res.setHeader('Content-Type', 'text/json')
