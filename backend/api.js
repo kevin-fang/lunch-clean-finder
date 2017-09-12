@@ -22,8 +22,8 @@ module.exports = {
 // turn a person row into an object
 function objectifyPersonRow(row) {
 	return {
-		firstName: row[1],
-		lastName: row[0],
+		first: row[1],
+		last: row[0],
 		day: row[2],
 		job: row[3],
 		team: row[4]
@@ -40,21 +40,31 @@ const objectifyTeamRow = (row) => {
 	}
 }
 
-// TODO: get the days that a person is working
-function getByName(auth) {
+/**
+ * Get all jobs of a specific person's name - FINISHED
+ * @param {any} auth 
+ */
+function getByName(auth, name) {
 	return new Promise((resolve, reject) => {
-		sheets.spreadsheets.values.get({
-			auth: auth,
-			spreadsheetId: SPREADSHEET_ID,
-			range: "" 
-		}, (err, response) => {
-
+		getJobByName(auth, name)
+		.then((response) => {
+			getByTeam(auth, response.team)
+			.then((response) => {
+				resolve(response)
+			}).catch((err) => {
+				console.log(err)
+				reject("Team not found? This should never happen. Please contact Kevin Fang on GitHub.")
+			})
+		})
+		.catch((err) => {
+			console.log(err)
+			reject("Name not found")
 		})
 	})
 }
 
-/** Get the job by a date - FINISHED
- * 
+/** 
+ * Get the job on a specific date - FINISHED
  * @param {any} auth 
  * @param {Date} date 
  */
@@ -67,29 +77,63 @@ function getByDate(auth, date) {
 			range: "Lunch Cleanup Schedule!A:D"
 		}, (err, response) => {
 			if (err) reject(err);
-			response.values.filter((row) => {
-				return row[0] !== "DATE"
+			var responseRow = response.values.filter((row) => {
+				return row !== [] && row[0] !== "DATE" && row[0] !== ""
 			}).filter((row) => {
 				return date.valueOf() === new Date(row[0]).withoutTime().valueOf()
-			})
-			.map((row) => {
+			}).map((row) => {
 				return objectifyTeamRow(row)
 			})
-			.map((row) => {
-				resolve(row)
-			})
-			
-			reject("Date not found: " + date.valueOf())
+
+			if (responseRow !== null) {
+				resolve(responseRow)
+			} else {
+				reject("Date not found: " + date.valueOf())
+			}
 		})
 	})
 }
 
-// TODO: get the days for a specific team
-function getByTeam() {
+/** 
+ * Get all job dates by team - FINISHED
+ * @param {any} auth 
+ * @param {string} team 
+ */
+function getByTeam(auth, team) {
+	team = team.slice(0, 1).toUpperCase()
+	teamDays = {
+		team: team,
+		days: null
+	}
+	return new Promise((resolve, reject) => {
+		sheets.spreadsheets.values.get({
+			auth: auth,
+			spreadsheetId: SPREADSHEET_ID,
+			range: "Lunch Cleanup Schedule!A:D"
+		}, (err, response) => {
+			if (err) reject(err);
+			teamDays.days = response.values.filter((row) => {
+				return row.length === 4 && row[0] !== "DATE" && row[3] !== "N/A" && row[3] !== "TBA"
+			}).filter((row) => {
+				return row[3] !== "N/A"
+			}).filter((row) => {
+				return row[3].includes(team)
+			}).map((row) => {
+				return objectifyTeamRow(row)
+			}).reduce((days, row) => {
+				return days.concat(row)
+			}, [])
 
+			resolve(teamDays)
+		})
+	})
 }
 
-// Get job for a specific person
+/**
+ * Get the job of a specific person
+ * @param {*} auth 
+ * @param {Object} name {first: "", last: ""}
+ */
 function getJobByName(auth, name) {
 	return new Promise((resolve, reject) => {
 		sheets.spreadsheets.values.get({
@@ -98,22 +142,26 @@ function getJobByName(auth, name) {
 			range: 'Job Assignments (by Name)!A:E'
 		}, (err, response) => {
 			if (err) return reject(err)
-			response.values.filter((row) => {
-				return (row[1] === name.first && row[0] === name.last)
-			})
-			.map((row) => {
+			var job = response.values.filter((row) => {
+				return row.length === 5 && row[1] === name.first && row[0] === name.last
+			}).map((row) => {
 				return objectifyPersonRow(row)
 			})
-			.map((row) => {
-				resolve(row)
-			})
-			reject("Person not found: " + name.first + " " + name.last)
+			if (job !== null) {
+				resolve(job)
+			} else {
+				reject("Person not found: " + name.first + " " + name.last)
+			}
 		})
 	})
 }
 
+/*
+	OAuth stuff below - do NOT change these unless you know what you are doing.
+*/
+
 /**
- * 
+ * Verify the OAuth key is valid
  * @param {function(err, oauth)} callback (err, OAuthkey) The callback to run after authorization
  */
 function verifyOauth(callback) {
@@ -127,8 +175,12 @@ function verifyOauth(callback) {
 	});
 }
 
+/**
+ * Authorize that the application has been initialized. Helper function for verifyOauth
+ * @param {*} credentials 
+ * @param {*} callback 
+ */
 function authorize(credentials, callback) {
-
   	var clientSecret = credentials.installed.client_secret;
   	var clientId = credentials.installed.client_id;
   	var redirectUrl = credentials.installed.redirect_uris[0];
@@ -145,30 +197,3 @@ function authorize(credentials, callback) {
   	  	}
   	});
 }
-
-/*
-function listMajors(auth) {
-	var sheets = google.sheets('v4');
-	sheets.spreadsheets.values.get({
-		auth: auth,
-		spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-		range: 'Class Data!A2:E',
-	}, function(err, response) {
-		if (err) {
-			console.log('The API returned an error: ' + err);
-			return;
-		}
-		var rows = response.values;
-		if (rows.length == 0) {
-			console.log('No data found.');
-		} else {
-			console.log('Name, Major:');
-			for (var i = 0; i < rows.length; i++) {
-				var row = rows[i];
-				// Print columns A and E, which correspond to indices 0 and 4.
-				console.log('%s, %s', row[0], row[4]);
-			}
-		}
-	});
-}
-*/

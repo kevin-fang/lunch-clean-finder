@@ -28,23 +28,57 @@ app.get('/today', (req, res) => {
 
 // TODO: return the days for a specific team
 app.get('/team/:team', (req, res) => {
-    console.log("Request for team: " + req.params.team.toUpperCase())
+    console.log("Request for team: " + req.params.team)
     res.setHeader('Content-Type', 'text/json')
-    var toReturn = {
-        team: req.params.team.toUpperCase()
-    }
-    res.send(JSON.stringify(toReturn))
+    api.getByTeam(auth, req.params.team)
+    .then((response) => {
+        res.send(JSON.stringify(response))
+    })
+    .catch((err) => {
+        res.send(JSON.stringify({error: "Team not found", request: req.params.team}))
+    })
 })
 
 // return the job days for a specific person - FINISHED
 app.get('/name/:first/:last', (req, res) => {
+    res.setHeader('Content-Type', 'text/json')
+    api.getByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
+        .then((response) => {
+            res.send(JSON.stringify(response))
+        })
+        .catch((err) => {
+            res.send(JSON.stringify(
+                {
+                    error: "Name not found", 
+                    request: 
+                        {
+                            first: req.params.first, 
+                            last: req.params.last
+                        }
+                    }
+                ))
+            console.log(err)
+        })
+})
+
+// return the job days for a specific person - FINISHED
+app.get('/getJob/:first/:last', (req, res) => {
     res.setHeader('Content-Type', 'text/json')
     api.getJobByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
         .then((response) => {
             res.send(JSON.stringify(response))
         })
         .catch((err) => {
-            res.send(JSON.stringify({error: "Name not found"}))
+            res.send(JSON.stringify(
+                {
+                    error: "Name not found", 
+                    request: 
+                        {
+                            first: req.params.first, 
+                            last: req.params.last
+                        }
+                    }
+                ))
             console.log(err)
         })
 })
