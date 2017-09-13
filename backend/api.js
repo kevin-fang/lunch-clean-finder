@@ -101,7 +101,7 @@ function getByDate(auth, date) {
  * @param {any} auth 
  * @param {string} team 
  */
-function getByTeam(auth, team) {
+function getByTeam(auth, team, day) {
 	team = team.slice(0, 1).toUpperCase()
 	teamDays = {
 		team: team,
@@ -117,11 +117,11 @@ function getByTeam(auth, team) {
 			teamDays.days = response.values.filter((row) => {
 				return row.length === 4 && row[0] !== "DATE" && row[3] !== "N/A" && row[3] !== "TBA"
 			}).filter((row) => {
-				return row[3] !== "N/A"
-			}).filter((row) => {
 				return row[3].includes(team)
 			}).map((row) => {
 				return objectifyTeamRow(row)
+			}).filter(row => {
+				return row.weekday === day.nameify()
 			}).reduce((days, row) => {
 				return days.concat(row)
 			}, [])

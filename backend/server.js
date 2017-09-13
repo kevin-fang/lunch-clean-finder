@@ -10,11 +10,11 @@ var api = require('./api.js')
 
 require('./util.js')
 
-// allow cross origin research sharing - so it works with a react frontend
+// allow cross origin resource sharing - so it works with a react frontend
 app.use(cors())
 
 function log(msg) {
-    return "[" + new Date().toISOString() + "]" + " " + msg
+    console.log("[" + new Date().toISOString() + "]" + " " + msg)
 }
 
 /**
@@ -33,10 +33,10 @@ app.get('/today', (req, res) => {
 })
 
 // TODO: return the days for a specific team
-app.get('/team/:team', (req, res) => {
+app.get('/team/:day/:team', (req, res) => {
     log("Request for team: " + req.params.team)
     res.setHeader('Content-Type', 'text/json')
-    api.getByTeam(auth, req.params.team).then((response) => {
+    api.getByTeam(auth, req.params.team, req.params.day).then((response) => {
         res.send(JSON.stringify(response))
     }).catch((err) => {
         res.send(JSON.stringify({error: "Team not found", request: req.params.team}))
