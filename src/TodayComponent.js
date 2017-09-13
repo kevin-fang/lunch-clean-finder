@@ -17,7 +17,7 @@ export default class TodayComponent extends React.Component {
                 alert(err)
             }
             if (response) {
-                this.setState({today: response.data})
+                this.setState({today: response})
             }
         })
     }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { GetJobByName, GetDatesByName } from './Api.js'
+import { GetJobByName, GetDatesByTeam } from './Api.js'
+import { MakeTableRow } from './util.js'
 require('./util.js')
 
 export class NameFormComponent extends React.Component {
@@ -53,21 +54,24 @@ export class NameDisplayComponent extends React.Component {
 			},
 			job: null,
 			days: null,
-			error: ""
+			error: "",
+			response: null,
+			notLunchClean: false
 		}
 		this.getDayDisplay = this.getDayDisplay.bind(this)
+		this.updateDates = this.updateDates.bind(this)
 	}
 
 	componentDidMount() {
 		GetJobByName(this.state.name, (response, err) => {
 			if (err) {
-				alert("An error occured")
+				alert(err)
 				this.setState({error: "An error occured."})
 			} else if (response === "") {
 				alert("Name not found.")
 				this.setState({error: "Name not found."})
 			} else {
-				this.setState({job: response})
+				this.setState({job: response}, this.updateDates)
 			}
 		}) 
 		/*
@@ -75,6 +79,19 @@ export class NameDisplayComponent extends React.Component {
 			if (err) alert(err)
 			this.setState({job: res.team, days: res.days})
 		})*/
+	}
+
+	updateDates() {
+		var team = this.state.job.team.slice(0)
+		var day = this.state.job.day
+
+		GetDatesByTeam(day, team, (res, err) => {
+            if (err) {
+                this.setState({notLunchClean: true, response: {error: true}})
+            } else {
+                this.setState({response: res})
+            }
+        })
 	}
 
 	getDayDisplay() {
@@ -92,7 +109,11 @@ export class NameDisplayComponent extends React.Component {
 				</div>
 			)
 		} else {
-			return null
+			return (
+				<div>
+					Loading job...
+				</div>
+			)
 		}
 	}
 
@@ -102,6 +123,13 @@ export class NameDisplayComponent extends React.Component {
 				First name: {this.state.name.first}<br/>
 				Last name: {this.state.name.last}<br/><br/>
 				{this.getDayDisplay()}
+				{this.state.response 
+                    ?   this.state.notLunchClean === false
+						? 	<ul>
+                           		{this.state.response.days.map(MakeTableRow)}
+                        	</ul>
+						: null
+                    : "Loading job dates..."}
 			</div>
 		)
 	}

@@ -7,9 +7,16 @@ var config = require('./config.json')
  */
 export const GetToday = (callback) => {
     axios.get(config.serverip + '/today')
-        .then(callback)
+        .then(response => callback(response.data))
         .catch((error) => {
-            if (error) console.error(error)
+            callback(null, error)
+        })
+}
+
+export const GetDatesByTeam = (day, team, callback) => {
+    axios.get(config.serverip + `/team/${day}/${team}`)
+        .then(response => callback(response.data))
+        .catch((error) => {
             callback(null, error)
         })
 }
@@ -20,7 +27,6 @@ export const GetDatesByName = (nameObject, callback) => {
             callback(response.data)
         })
         .catch(err => {
-            console.error(err)
             callback(null, err)
         })
 }

@@ -67,7 +67,7 @@ app.get('/name/:first/:last', (req, res) => {
 
 // return the job days for a specific person - FINISHED
 app.get('/jobbyname/:first/:last', (req, res) => {
-    log("Request for job name")
+    log("Request for job name: " + req.params.first + " " + req.params.last)
     res.setHeader('Content-Type', 'text/json')
     api.getJobByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
         .then((response) => {

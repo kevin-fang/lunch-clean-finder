@@ -9,7 +9,7 @@ const Main = () => (
       <Switch>
         <Route exact path='/' component={TodayComponent}/>
         <Route path='/name/:first/:last' component={NameDisplayComponent}/>
-        <Route path='/team/:teamname' component={TeamDisplayComponent}/>
+        <Route path='/team/:day/:teamname' component={TeamDisplayComponent}/>
         <Route exact path='/name' component={NameFormComponent}/>
         <Route exact path='/team' component={TeamFormComponent}/>
       </Switch>
