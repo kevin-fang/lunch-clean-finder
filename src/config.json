@@ -1,5 +1,5 @@
 {
-    "serverip": "http://localhost:8000",
+    "serverip": "http://10.1.1.105:8000",
     "teams": [
         "A: Asparagus",
         "B: Brussel Sprouts",

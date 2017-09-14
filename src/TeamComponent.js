@@ -9,7 +9,7 @@ require('./util.js')
 export class TeamFormComponent extends React.Component {
     constructor(props) {
         super(props)
-        this.submit = this.s1ubmit.bind(this)
+        this.submit = this.submit.bind(this)
         this.state = {
             redirect: false,
             teamToSubmit: "A: asparagus",
@@ -66,7 +66,6 @@ export class TeamDisplayComponent extends React.Component {
         this.state = {
             response: null
         }
-        this.makeTableRow = this.makeTableRow.bind(this)
     }
 
     componentDidMount() {

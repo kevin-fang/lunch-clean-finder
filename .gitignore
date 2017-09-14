@@ -25,3 +25,5 @@ yarn-error.log*
 /backend/node_modules
 
 /.vs
+
+client_secret.json
