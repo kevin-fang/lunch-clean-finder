@@ -1,8 +1,9 @@
-# Student Jobs Finder
+# Student Jobs Finder 
+Kevin Fang, 2017
 
-Contains backend and frontend to a student jobs finder. Written in React.js and Node.js.
+Contains backend and frontend to a student jobs finder. Require Node.js to be installed.
 
 ## Setting up the server
-Run `cd backend` and modify the port and spreadsheet id in `./config.json` if necessary.  
-Run `npm i && node initialize.js` and log into the Google account that has the jobs spreadsheet shared with it.   
-Start the server with `node run.js`.
+The backend is contained in `backend/`, and instructions are included for obtaining a client secret file from Google and starting the server.
+
+The frontend is in the base directory. Change `src/config.json` to reflect the IP of the backend server. Run `npm i && npm start` in this directory to start the React server.

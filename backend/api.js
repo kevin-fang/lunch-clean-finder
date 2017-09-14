@@ -78,7 +78,11 @@ function getByDate(auth, date) {
 			spreadsheetId: SPREADSHEET_ID,
 			range: "Lunch Cleanup Schedule!A:D"
 		}, (err, response) => {
-			if (err) reject(err);
+			if (err) {
+				reject(err)
+			} else if (response === null) {
+				reject("Failed to reach cleanup schedule spreadsheet.")
+			}
 			var responseRow = response.values.filter((row) => {
 				return row !== [] && row[0] !== "DATE" && row[0] !== ""
 			}).filter((row) => {
