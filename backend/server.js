@@ -44,30 +44,8 @@ app.get('/team/:day/:team', (req, res) => {
 })
 
 // return the job days for a specific person - FINISHED
-app.get('/name/:first/:last', (req, res) => {
-    res.setHeader('Content-Type', 'text/json')
-    api.getByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
-        .then((response) => {
-            res.send(JSON.stringify(response))
-        })
-        .catch((err) => {
-            res.send(JSON.stringify(
-                {
-                    error: "Name not found", 
-                    request: 
-                        {
-                            first: req.params.first, 
-                            last: req.params.last
-                        }
-                    }
-                ))
-            console.log(err)
-        })
-})
-
-// return the job days for a specific person - FINISHED
 app.get('/jobbyname/:first/:last', (req, res) => {
-    log("Request for job name: " + req.params.first + " " + req.params.last)
+    log("Request for job by name: " + req.params.first + " " + req.params.last)
     res.setHeader('Content-Type', 'text/json')
     api.getJobByName(auth, {first: req.params.first.nameify(), last: req.params.last.nameify()})
         .then((response) => {
