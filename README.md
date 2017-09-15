@@ -1,7 +1,7 @@
 # Student Jobs Finder 
 Kevin Fang, 2017
 
-Contains backend and frontend to a student jobs finder. Require Node.js to be installed.
+Contains backend and frontend to a student jobs finder. Requires Node.js and npm.
 
 ## Setting up the server
 The backend is contained in `backend/`, and instructions are included for obtaining a client secret file from Google and starting the server.
