@@ -13,8 +13,7 @@ export default class TodayComponent extends React.Component {
     componentDidMount() {
         GetToday((response, err) => {
             if (err) {
-                console.log(err)
-                alert(err)
+                //alert(err)
             }
             if (response) {
                 this.setState({today: response})
