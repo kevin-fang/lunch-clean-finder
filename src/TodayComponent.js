@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetToday } from './Api.js'
+import { GetToday, GetTeamsByDate } from './Api.js'
 import CircularProgress from 'material-ui/CircularProgress'
 
 // list of the team names
@@ -46,28 +46,39 @@ export default class TodayComponent extends React.Component {
             weekend: false
         }
         this.getWorkingTeams = this.getWorkingTeams.bind(this)
+        this.getNextMonday = this.getNextMonday.bind(this)
+        this.fixWeekendDate = this.fixWeekendDate.bind(this)
     }
 
     componentDidMount() {
         GetToday((response, err) => {
             if (err) {
                 alert(err)
-            }
-            if (response) {
+            } else if (response) {
                 if (response.weekend === false) {
                     this.setState({today: response, weekend: false})
                 } else {
-                    this.setState({weekend: true, today: {date: new Date('9/16/2017')}})
+                    this.setState({weekend: true, today: {date: new Date()}})
                 }
             }
         })
     }
 
-    getWorkingTeams() {
+    fixWeekendDate(date) {
+        GetTeamsByDate(date, (response, err) => {
+            if (err) {
+                alert(err)
+            } else if (response) {
+                this.setState({today: response, weekend: true})
+            }
+        })
+    }
+
+    getWorkingTeams(message) {
         return (
             <div>
                 <span style={{fontSize: 16, marginTop: 16}}><br/>
-                Teams working today:
+                {message}
                 <ul style={{listStyle: 'none'}}>
                     {this.state.today.team.split("")
                         .map(letter => (teams[letter]))
@@ -78,19 +89,34 @@ export default class TodayComponent extends React.Component {
         )
     }
 
+    getNextMonday(date) {
+        // add 1 and then add a week, mod 7.
+        date.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7)
+        return date
+    }
+
     render() {
+        if (this.state.weekend && this.state.today.team === undefined) {
+            this.fixWeekendDate(this.getNextMonday(new Date(this.state.today.date)))
+            return <div>Loading...</div>
+        } else if (this.state.weekend) {
+            return (
+                <div>
+                {this.state.today &&
+                    <div>
+                        <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
+                        {this.getWorkingTeams("Teams working next Monday:")}
+                    </div>
+                }
+            </div>
+            )
+        }
         return (
             <div>
                 {this.state.today 
                     ? <div>
-                        <span style={{fontSize: 36}}>{formatDate(new Date(this.state.today.date))}</span><br/>
-                        {this.state.weekend === false
-                            ? this.getWorkingTeams()
-                            : <div>
-                                {this.state.weekend}
-                                The next date for a weekday is: 
-                            </div>
-                        }
+                        <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
+                        {this.state.weekend === false && this.getWorkingTeams("Teams working today:")}
                     </div>
                     :   <div>
                             <CircularProgress /><br/>
