@@ -12,6 +12,7 @@ import {
 	TableRowColumn,
 } from 'material-ui/Table'
 import TextField from 'material-ui/TextField'
+import CircularProgress from 'material-ui/CircularProgress'
 import RaisedButton from 'material-ui/RaisedButton'
 
 require('./util.js')
@@ -65,8 +66,9 @@ export class NameFormComponent extends React.Component {
 							this.updateEnabled()
 						})
 					}}/>
-				<br/>
+				
 				<TextField hintText='Last Name' 
+					style={{marginLeft: 20}}
 					onKeyPress={this.handleKeyPress} 
 					onChange={(event) => {
 						this.setState({last: event.target.value}, () => {
@@ -101,15 +103,16 @@ export class NameDisplayComponent extends React.Component {
 		this.getDayDisplay = this.getDayDisplay.bind(this)
 		this.updateDates = this.updateDates.bind(this)
 		this.makeTable = this.makeTable.bind(this)
+		this.getJobDates = this.getJobDates.bind(this)
 	}
 
 	componentDidMount() {
 		GetJobByName(this.state.name, (response, err) => {
 			if (err) {
-				alert(err)
+				//alert(err)
 				this.setState({error: "An error occured."})
 			} else if (response === "") {
-				alert("Name not found.")
+				//alert("Name not found.")
 				this.setState({error: "Name not found."})
 			} else {
 				this.setState({job: response}, this.updateDates)
@@ -144,10 +147,18 @@ export class NameDisplayComponent extends React.Component {
 					}
 				</div>
 			)
-		} else {
+		} else if (this.state.error) {
 			return (
 				<div>
-					Loading job...
+					{this.state.error}
+				</div>
+			)
+		}
+		else {
+			return (
+				<div>
+					Loading job...<br/>
+					<CircularProgress /> <br/><br/>
 				</div>
 			)
 		}
@@ -184,16 +195,32 @@ export class NameDisplayComponent extends React.Component {
 		)
 	}
 
+	getJobDates() {
+		if (this.state.response !== null) {
+			if (this.state.notLunchClean === false) {
+				return this.makeTable(this.state.response.days)
+			} else {
+				return null
+			}
+		} else if (this.state.error) {
+			return null
+		} else {
+			return (
+				<div>
+					<br/><span>Loading job dates...</span><br/>
+					<CircularProgress /> 
+				</div>
+			)
+		}
+	}
+
 	render() {
 		return (
 			<div> 
 				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
 				{this.getDayDisplay()}
-				{this.state.response 
-                    ?   this.state.notLunchClean === false
-						? 	this.makeTable(this.state.response.days)
-						: null
-                    : "Loading job dates..."}
+				{this.getJobDates()}
+				
 			</div>
 		)
 	}
