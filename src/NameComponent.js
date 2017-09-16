@@ -61,25 +61,26 @@ export class NameFormComponent extends React.Component {
 		}
 		return (
 			<div>
-				{/* First name */}
-				<TextField hintText='First Name'
-					value={this.state.first}
-					autoFocus={true}
-					onChange={event => {
-						this.setState({first: event.target.value}, () => {
-							this.updateEnabled()
-						})
-					}}/>
-				
-				{/* Last name */}
-				<TextField hintText='Last Name' 
-					style={{marginLeft: 20}}
-					onKeyPress={this.handleKeyPress} 
-					onChange={(event) => {
-						this.setState({last: event.target.value}, () => {
-							this.updateEnabled()
-						})
-					}}/>
+				<div>
+					{/* First name */}
+					<TextField hintText='First Name'
+						value={this.state.first}
+						autoFocus={true}
+						style={{marginRight: 8}}
+						onChange={event => {
+							this.setState({first: event.target.value}, () => {
+								this.updateEnabled()
+							})
+						}}/>
+					{/* Last name */}
+					<TextField hintText='Last Name' 
+						onKeyPress={this.handleKeyPress} 
+						onChange={(event) => {
+							this.setState({last: event.target.value}, () => {
+								this.updateEnabled()
+							})
+						}}/>
+				</div>
 				<br/>
 				{/* Submit button */}
 				<RaisedButton 
@@ -178,14 +179,21 @@ export class NameDisplayComponent extends React.Component {
 	// make a formatted table of dates
 	makeTable(days) {
 		var today = new Date()
+		var smallNotes = {
+		}
+		var dateStyle = {
+			width: 70
+		}
+		var teamStyle = {
+			width: 20
+		}
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 					<TableRow>
-						<TableHeaderColumn>Date</TableHeaderColumn>
-						<TableHeaderColumn>Weekday</TableHeaderColumn>
-						<TableHeaderColumn>Team</TableHeaderColumn>
-						<TableHeaderColumn>Notes</TableHeaderColumn>
+						<TableHeaderColumn style={dateStyle}>Date</TableHeaderColumn>
+						<TableHeaderColumn style={teamStyle}>Team</TableHeaderColumn>
+						<TableHeaderColumn style={smallNotes}>Notes</TableHeaderColumn>
 					</TableRow>
 				</TableHeader>
 				<TableBody displayRowCheckbox={false}>
@@ -195,10 +203,9 @@ export class NameDisplayComponent extends React.Component {
 						}).map(day => {
 							return (
 								<TableRow>
-									<TableRowColumn>{day.date}</TableRowColumn>
-									<TableRowColumn>{day.weekday}</TableRowColumn>
-									<TableRowColumn>{day.team}</TableRowColumn>
-									<TableRowColumn>{day.notes}</TableRowColumn>
+									<TableRowColumn style={dateStyle}>{day.date}</TableRowColumn>
+									<TableRowColumn style={teamStyle}>{day.team}</TableRowColumn>
+									<TableRowColumn style={smallNotes}>{day.notes}</TableRowColumn>
 								</TableRow>
 							)
 						})
@@ -231,7 +238,9 @@ export class NameDisplayComponent extends React.Component {
 	render() {
 		return (
 			<div> 
-				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
+				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div>
+				<div>Bookmark this page for future use!</div><br/>
+
 				{this.getDayDisplay()}
 				{this.getJobDates()}
 				

@@ -107,29 +107,38 @@ export class TeamDisplayComponent extends React.Component {
 
     // create a table with the days
     makeTable(days) {
+		var today = new Date()
+		var smallNotes = {
+		}
+		var dateStyle = {
+			width: 70
+		}
+		var teamStyle = {
+			width: 20
+		}
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 					<TableRow>
-						<TableHeaderColumn>Date</TableHeaderColumn>
-						<TableHeaderColumn>Weekday</TableHeaderColumn>
-						<TableHeaderColumn>Team</TableHeaderColumn>
-						<TableHeaderColumn>Notes</TableHeaderColumn>
+						<TableHeaderColumn style={dateStyle}>Date</TableHeaderColumn>
+						<TableHeaderColumn style={teamStyle}>Team</TableHeaderColumn>
+						<TableHeaderColumn style={smallNotes}>Notes</TableHeaderColumn>
 					</TableRow>
 				</TableHeader>
 				<TableBody displayRowCheckbox={false}>
-					{days.filter(day => {
-						return new Date(day.date) > new Date()
-					}).map(day => {
-						return (
-							<TableRow key={day.date}>
-								<TableRowColumn>{day.date}</TableRowColumn>
-								<TableRowColumn>{day.weekday}</TableRowColumn>
-								<TableRowColumn>{day.team}</TableRowColumn>
-								<TableRowColumn>{day.notes}</TableRowColumn>
-							</TableRow>
-						)
-					})}
+					{
+						days.filter(day => {
+							return new Date(day.date) > today // only print dates after today
+						}).map(day => {
+							return (
+								<TableRow>
+									<TableRowColumn style={dateStyle}>{day.date}</TableRowColumn>
+									<TableRowColumn style={teamStyle}>{day.team}</TableRowColumn>
+									<TableRowColumn style={smallNotes}>{day.notes}</TableRowColumn>
+								</TableRow>
+							)
+						})
+					}
 				</TableBody>
 			</Table>
 		)

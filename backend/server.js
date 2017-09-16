@@ -64,7 +64,7 @@ app.get('/date', (req, res) => {
     }
 })
 
-// TODO: return the days for a specific team
+// return the job days for a specific team - FINISHED
 app.get('/team/:day/:team', (req, res) => {
     log("Request for team: " + req.params.team)
     res.setHeader('Content-Type', 'text/json')
