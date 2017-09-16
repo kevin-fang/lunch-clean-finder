@@ -6,7 +6,9 @@ var config = require('./config.json')
  * @param {function} callback The callback to call after reaching the API
  */
 export const GetToday = (callback) => {
-    axios.get(config.serverip + '/today')
+    var today = new Date()
+    var request = config.serverip + `/date?month=${today.getMonth() + 1}&day=${today.getDate()}&year=${today.getFullYear()}`
+    axios.get(request)
         .then(response => callback(response.data))
         .catch((error) => {
             callback(null, error)

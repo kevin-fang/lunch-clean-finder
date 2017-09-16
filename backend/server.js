@@ -18,18 +18,49 @@ function log(msg) {
 }
 
 /**
- * return the team working today
+ * Return the team working today - DEPRECATED; please call /date?month=[]&day=[]&year=[]
  */
 app.get('/today', (req, res) => {
-    log("Request for today")
+    log("Request for today - DEPRECATED - please use /date with today's date.")
     res.setHeader('Content-Type', 'text/json')
-    var today = new Date()
-    api.getByDate(auth, today).then((response) => {
-        res.send(JSON.stringify(response[0]))
-    }).catch((err) => {
-        res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
-        console.log(err)
-    })
+    var today = new Date('9/16/2017')
+    if (today.getDay() === 0) {
+        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
+    } else if (today.getDay() === 6) {
+        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
+    } else {
+        api.getByDate(auth, today).then((response) => {
+            res.send(JSON.stringify(response[0]))
+        }).catch((err) => {
+            res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
+            console.log(err)
+        })
+    }
+})
+
+/**
+ * Get team for a certain date
+ * /date?month=[..]&day=[..]&year=[..]
+ */
+app.get('/date', (req, res) => {
+    const formatDate = (req) => (
+        req.query.month + '/' + req.query.day + '/' + req.query.year
+    )
+    var date = formatDate(req)
+    log("Request for date: " + date)
+    date = new Date(date)
+    res.setHeader('Content-Type', 'text/json')
+    if (date.getDay() === 0) {
+        res.send(JSON.stringify({weekend: true, day: "Sunday"}))
+    } else if (date.getDay() === 6) {
+        res.send(JSON.stringify({weekend: true, day: "Saturday"}))
+    } else {
+        api.getByDate(auth, date).then((response) => {
+            res.send(JSON.stringify(response[0]))
+        }).catch(err => {
+            res.send(JSON.stringify({error: "date not found", date: JSON.stringify(date)}))
+        })
+    }
 })
 
 // TODO: return the days for a specific team

@@ -14,7 +14,7 @@ const muiTheme = getMuiTheme({
 		height: 70
 	},
 	palette: {
-		primary1Color: '#c5493d'
+		primary1Color: '#aa382c'
 	}
 })
 
