@@ -10,7 +10,7 @@ export const GetToday = (callback) => {
 }
 
 /**
- * 
+ * Get the teams that work on a specific date
  * @param {Date} date The date to check
  * @param {function} callback Callback after reaching API
  */

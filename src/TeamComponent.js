@@ -1,7 +1,21 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetDatesByTeam } from './Api.js'
-import { MakeTableRow } from './util.js'
+
+// material-ui imports
+import {
+	Table,
+	TableBody,
+	TableHeader,
+	TableHeaderColumn,
+	TableRow,
+	TableRowColumn,
+} from 'material-ui/Table'
+import CircularProgress from 'material-ui/CircularProgress'
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
+import RaisedButton from 'material-ui/RaisedButton'
+
 const config = require('./config.json')
 const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 require('./util.js')
@@ -12,7 +26,7 @@ export class TeamFormComponent extends React.Component {
         this.submit = this.submit.bind(this)
         this.state = {
             redirect: false,
-            teamToSubmit: "A: asparagus",
+            teamToSubmit: "A: Asparagus",
             dayToSubmit: "Monday"
         }
         this.teams = config.teams
@@ -20,19 +34,19 @@ export class TeamFormComponent extends React.Component {
         this.handleDayChange = this.handleDayChange.bind(this)
     }
 
-    handleTeamChange(event) {
+    handleTeamChange(event, index, value) {
         this.setState({
-            teamToSubmit: event.target.value
+            teamToSubmit: config.teams[index]
         })
     }
 
-    handleDayChange(event) {
+    handleDayChange(event, index, value) {
         this.setState({
-            dayToSubmit: event.target.value
+            dayToSubmit: value
         })
     }
 
-    submit() {
+    submit(event) {
         this.setState({
             redirect: true
         })
@@ -44,15 +58,19 @@ export class TeamFormComponent extends React.Component {
         }
         return (
             <div>
-                <select value={this.state.dayToSubmit}
+                <DropDownMenu value={this.state.dayToSubmit}
+                    autoWidth={false}
+                    style={{minWidth: '200px', maxWidth: '200px'}}
                     onChange={this.handleDayChange}>
-                    {weekdays.map((name) => <option>{name}</option>)}
-                </select><br/>
-                <select value={this.state.teamToSubmit}
+                    {weekdays.map((weekday) => <MenuItem primaryText={weekday} key={weekday} value={weekday}/>)}
+                </DropDownMenu>
+                <DropDownMenu value={this.state.teamToSubmit}
+                    autoWidth={false}
+                    style={{minWidth: '200px', maxWidth: '200px'}}
                     onChange={this.handleTeamChange}>
-                    {this.teams.map((name) => <option>{name}</option>)}
-                </select><br/><br/>
-                <button onClick={this.submit}>Submit</button>
+                    {this.teams.map((name) => <MenuItem primaryText={name} key={name} value={name}/>)}
+                </DropDownMenu><br/>
+                <RaisedButton onClick={this.submit} label="Check" primary={true} style={{marginLeft: 24}} />
             </div>
         )
     }
@@ -66,6 +84,7 @@ export class TeamDisplayComponent extends React.Component {
         this.state = {
             response: null
         }
+        this.makeTable = this.makeTable.bind(this)
     }
 
     componentDidMount() {
@@ -77,16 +96,44 @@ export class TeamDisplayComponent extends React.Component {
             }
         })
     }
+
+    makeTable(days) {
+		return(
+			<Table>
+				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+					<TableRow>
+						<TableHeaderColumn>Date</TableHeaderColumn>
+						<TableHeaderColumn>Weekday</TableHeaderColumn>
+						<TableHeaderColumn>Team</TableHeaderColumn>
+						<TableHeaderColumn>Notes</TableHeaderColumn>
+					</TableRow>
+				</TableHeader>
+				<TableBody displayRowCheckbox={false}>
+					{days.filter(day => {
+						return new Date(day.date) > new Date()
+					}).map(day => {
+						return (
+							<TableRow key={day.date}>
+								<TableRowColumn>{day.date}</TableRowColumn>
+								<TableRowColumn>{day.weekday}</TableRowColumn>
+								<TableRowColumn>{day.team}</TableRowColumn>
+								<TableRowColumn>{day.notes}</TableRowColumn>
+							</TableRow>
+						)
+					})}
+				</TableBody>
+			</Table>
+		)
+    }
+    
     render() {
         return (
             <div>
-                Team: {this.team}<br/>
-                Day: {this.day}<br/>
+                <span style={{fontSize: 18}}>Team: {config.teamNames[this.team]}</span><br/>
+                <span style={{fontSize: 18}}>Day: {this.day}</span><br/>
                 {this.state.response 
-                    ?   <ul>
-                           {this.state.response.days.map(MakeTableRow)}
-                        </ul>
-                    : "Loading..."}
+                    ?   this.makeTable(this.state.response.days)
+                    : <CircularProgress />}
             </div>
         )
     }

@@ -1,5 +1,7 @@
 import React from 'react';
 import { GetToday, GetTeamsByDate } from './Api.js'
+
+// material-ui imports
 import CircularProgress from 'material-ui/CircularProgress'
 
 // list of the team names
@@ -77,12 +79,12 @@ export default class TodayComponent extends React.Component {
     getWorkingTeams(message) {
         return (
             <div>
-                <span style={{fontSize: 16, marginTop: 16}}><br/>
+                <span style={{fontSize: 18, marginTop: 16}}><br/>
                 {message}
                 <ul style={{listStyle: 'none'}}>
                     {this.state.today.team.split("")
                         .map(letter => (teams[letter]))
-                        .map(name => (<li>{name}</li>))}
+                        .map(name => (<li key={name}>{name}</li>))}
                 </ul>
                 </span> <br/>
             </div>

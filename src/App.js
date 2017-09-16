@@ -13,8 +13,10 @@ const muiTheme = getMuiTheme({
 	appBar: {
 		height: 70
 	},
+	fontFamily: 'Roboto, sans-serif',
 	palette: {
-		primary1Color: '#aa382c'
+		primary1Color: '#b71c1c',
+		accent1Color: "#45585f"
 	}
 })
 

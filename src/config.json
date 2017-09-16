@@ -4,5 +4,10 @@
         "A: Asparagus",
         "B: Brussel Sprouts",
         "C: Cauliflower"
-    ]
+    ],
+    "teamNames": {
+        "A": "Asparagus",
+        "B": "Brussel Sprouts",
+        "C": "Cauliflower"
+    }
 }

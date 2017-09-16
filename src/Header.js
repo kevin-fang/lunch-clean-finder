@@ -7,6 +7,9 @@ import AppBar from 'material-ui/AppBar'
 import MenuItem from 'material-ui/MenuItem'
 import Home from 'material-ui-icons/Home'
 import Search from 'material-ui-icons/Search'
+import Info from 'material-ui-icons/Info'
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
 import SvgIcon from 'material-ui/SvgIcon'
 
 const noLinkUnderline = { 
@@ -23,11 +26,13 @@ export default class Header extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			open: false,
+			infoOpen: false,
 			redirect: null
 		}
 		this.handleMenuClick = this.handleMenuClick.bind(this)
-		this.openDrawer = this.openDrawer.bind(this)
+        this.openDrawer = this.openDrawer.bind(this)
+        this.displayInfo = this.displayInfo.bind(this)
+        this.handleClose = this.handleClose.bind(this)
 	}
 
 	openDrawer() {
@@ -40,20 +45,54 @@ export default class Header extends React.Component {
 		this.setState({
 			open: false
 		})
-	}
+    }
+    
+    handleClose() {
+        this.setState({infoOpen: false})
+    }
+    
+    displayInfo() {
+        this.setState({infoOpen: true})
+    }
+
     render() {
+        const actions = [
+            <FlatButton
+                label="Dismiss"
+                secondary={true}
+                onClick={this.handleClose}
+            />
+        ]
         if (this.state.redirect !== null) {
             return <Redirect to={`/${this.state.redirect}`} />
         }
-
         return (
             <div>
-                <AppBar title="Commonwealth School Student Jobs" onLeftIconButtonTouchTap={this.openDrawer} />
+                <AppBar title="Commonwealth School Student Jobs" 
+                    onLeftIconButtonTouchTap={this.openDrawer} 
+                    iconElementRight={
+                        <FlatButton 
+                            icon={<Info />}
+                        />}
+                    onRightIconButtonTouchTap={(event) => this.displayInfo()}
+                />
+                <Dialog
+                    open={this.state.infoOpen}
+                    title="About"
+                    actions={actions}
+                    contentStyle={{width: '30%'}}
+                    onRequestClose={this.handleClose}>
+                        Made by <b>Kevin Fang</b>, class of 2018<br/>
+                        <ul style={{padding: 8, margin: 0}}>
+                            <li><b>React.js</b>, v15.6.1</li>
+                            <li><b>Node.js</b>, v7.8.0</li>
+                        </ul>
+                </Dialog>
                 <Drawer
                     open={this.state.open}
                     docked={false}
                     onRequestChange={(open) => this.setState({open: open})}>
-                    <AppBar title="Navigation" showMenuIconButton={false} />
+                    <AppBar title="Navigation" showMenuIconButton={false} /><br/>
                     <Link to='/' style={noLinkUnderline}><MenuItem leftIcon={<Home />} onClick={this.handleMenuClick}>Home</MenuItem></Link>
                     <Link to='/name' style={noLinkUnderline}><MenuItem leftIcon={<Search />} onClick={this.handleMenuClick}>Name Search</MenuItem></Link>
                     <Link to='/team' style={noLinkUnderline}><MenuItem leftIcon={<TeamIcon />} onClick={this.handleMenuClick}>Team Search</MenuItem></Link>
@@ -62,11 +101,3 @@ export default class Header extends React.Component {
         )
     }
 }
-/*
-
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/name">Name</Link></li>
-                <li><Link to="/team">Team</Link></li>
-            </ul>
-            */
