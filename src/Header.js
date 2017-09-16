@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 // material-ui stuff
 import Drawer from 'material-ui/Drawer'
@@ -12,10 +12,12 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import SvgIcon from 'material-ui/SvgIcon'
 
+// disable underline for navigation bar
 const noLinkUnderline = { 
     textDecoration: 'none' 
 }
 
+// the 'abc' vector icon
 const TeamIcon = (props) => (
     <SvgIcon {...props}>
         <path fill="#000000" d="M6,11A2,2 0 0,1 8,13V17H4A2,2 0 0,1 2,15V13A2,2 0 0,1 4,11H6M4,13V15H6V13H4M20,13V15H22V17H20A2,2 0 0,1 18,15V13A2,2 0 0,1 20,11H22V13H20M12,7V11H14A2,2 0 0,1 16,13V15A2,2 0 0,1 14,17H12A2,2 0 0,1 10,15V7H12M12,15H14V13H12V15Z" />
@@ -27,67 +29,61 @@ export default class Header extends React.Component {
 		super(props)
 		this.state = {
 			infoOpen: false,
-			redirect: null
 		}
 		this.handleMenuClick = this.handleMenuClick.bind(this)
-        this.openDrawer = this.openDrawer.bind(this)
-        this.displayInfo = this.displayInfo.bind(this)
-        this.handleClose = this.handleClose.bind(this)
+        this.openNavMenu = this.openNavMenu.bind(this)
+        this.openInfoDialog = this.openInfoDialog.bind(this)
+        this.handleDialogClose = this.handleDialogClose.bind(this)
 	}
 
-	openDrawer() {
-		this.setState({
-			open: true
-		})
-	}
 
-	handleMenuClick(e) {
-		this.setState({
-			open: false
-		})
-    }
+	openNavMenu() {this.setState({open: true})}
+
+    // handle a click in the navigation menu; close the menu
+	handleMenuClick(e) {this.setState({open: false})}
     
-    handleClose() {
-        this.setState({infoOpen: false})
-    }
-    
-    displayInfo() {
-        this.setState({infoOpen: true})
-    }
+    // handle dialog close
+    handleDialogClose() {this.setState({infoOpen: false})}
+
+    // handle dialog open
+    openInfoDialog() {this.setState({infoOpen: true})}
 
     render() {
+        // actions in the info dialog
         const actions = [
             <FlatButton
-                label="Dismiss"
+                label={<b>Dismiss</b>}
                 secondary={true}
-                onClick={this.handleClose}
+                onClick={this.handleDialogClose}
             />
         ]
-        if (this.state.redirect !== null) {
-            return <Redirect to={`/${this.state.redirect}`} />
-        }
+
         return (
-            <div>
+            <div> 
+                {/* Render the application bar with info button and navigation menu*/}
                 <AppBar title="Commonwealth School Student Jobs" 
-                    onLeftIconButtonTouchTap={this.openDrawer} 
+                    onLeftIconButtonTouchTap={this.openNavMenu} 
                     iconElementRight={
                         <FlatButton 
                             icon={<Info />}
                         />}
-                    onRightIconButtonTouchTap={(event) => this.displayInfo()}
+                    onRightIconButtonTouchTap={(event) => this.openInfoDialog()}
                 />
+                {/* Info dialog */}
                 <Dialog
                     open={this.state.infoOpen}
-                    title="About"
+                    title={<div><b>About</b></div>}
                     actions={actions}
                     contentStyle={{width: '30%'}}
-                    onRequestClose={this.handleClose}>
+                    onRequestClose={this.handleDialogClose}>
                         Made by <b>Kevin Fang</b>, class of 2018<br/>
-                        <ul style={{padding: 8, margin: 0}}>
+                        <ul style={{padding: 8, margin: 4}}>
                             <li><b>React.js</b>, v15.6.1</li>
                             <li><b>Node.js</b>, v7.8.0</li>
+                            <li><a href="https://github.com/kevin-fang/student-jobs-finder" target="_blank" rel="noopener noreferrer">Source code avaliable on GitHub</a></li>
                         </ul>
                 </Dialog>
+                {/* Create the navigation menu */}
                 <Drawer
                     open={this.state.open}
                     docked={false}

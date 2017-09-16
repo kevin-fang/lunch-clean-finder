@@ -36,7 +36,7 @@ function addSuffix(num) {
 
 // format a date. new Date('9/8/2017') => "It is Friday, September 8"
 function formatDate(date) {
-    return "It is " + days[date.getDay()] + ", " + months[date.getMonth()] + " " + addSuffix(date.getDate());
+    return "Today is " + days[date.getDay()] + ", " + months[date.getMonth()] + " " + addSuffix(date.getDate());
 }
 
 export default class TodayComponent extends React.Component {

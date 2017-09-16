@@ -8,6 +8,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 injectTapEventPlugin()
+
+// produce MuiTheme with CWS colors
 const muiTheme = getMuiTheme({
 	margin: 0,
 	appBar: {

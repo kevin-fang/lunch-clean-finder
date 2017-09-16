@@ -20,6 +20,7 @@ const config = require('./config.json')
 const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 require('./util.js')
 
+// choose a team that is working and then redirect to TeamDisplayComponent
 export class TeamFormComponent extends React.Component {
     constructor(props) {
         super(props)
@@ -34,18 +35,21 @@ export class TeamFormComponent extends React.Component {
         this.handleDayChange = this.handleDayChange.bind(this)
     }
 
+    // handle a team change from the dropdown menu
     handleTeamChange(event, index, value) {
         this.setState({
             teamToSubmit: config.teams[index]
         })
     }
 
+    // handle a day change from the dropdown menu
     handleDayChange(event, index, value) {
         this.setState({
             dayToSubmit: value
         })
     }
 
+    // tell the page to redirect 
     submit(event) {
         this.setState({
             redirect: true
@@ -53,9 +57,11 @@ export class TeamFormComponent extends React.Component {
     }
 
     render() {
+        // redirect if needed
         if (this.state.redirect === true) {
             return <Redirect push to={`/team/${this.state.dayToSubmit}/${this.state.teamToSubmit.slice(0, 1)}`}/>
         }
+        // create dropdown menus and submit button
         return (
             <div>
                 <DropDownMenu value={this.state.dayToSubmit}
@@ -76,6 +82,7 @@ export class TeamFormComponent extends React.Component {
     }
 }
 
+// display the dates that a team works
 export class TeamDisplayComponent extends React.Component {
     constructor(props) {
         super(props)
@@ -87,6 +94,7 @@ export class TeamDisplayComponent extends React.Component {
         this.makeTable = this.makeTable.bind(this)
     }
 
+    // once the page loads, get all the dates 
     componentDidMount() {
         GetDatesByTeam(this.day, this.team, (res, err) => {
             if (err) {
@@ -97,6 +105,7 @@ export class TeamDisplayComponent extends React.Component {
         })
     }
 
+    // create a table with the days
     makeTable(days) {
 		return(
 			<Table>

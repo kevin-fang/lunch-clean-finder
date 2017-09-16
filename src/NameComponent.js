@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetJobByName, GetDatesByTeam } from './Api.js'
 
-// material-ui stuff
+// material-ui imports
 import {
 	Table,
 	TableBody,
@@ -17,6 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 require('./util.js')
 
+// Form that takes name as input and submits it, redirecting to the NameDisplayComponent
 export class NameFormComponent extends React.Component {
 	constructor(props) {
 		super(props)
@@ -31,10 +32,10 @@ export class NameFormComponent extends React.Component {
 		this.updateEnabled = this.updateEnabled.bind(this)
 	}
 
-	submit() {
-		this.setState({redirect: true})
-	}
+	// submit by telling the page to redirect with the state
+	submit() {this.setState({redirect: true})}
 
+	// update whether the submit button is enabled
 	updateEnabled() {
 		var nameValidation = /^([a-z]|-)+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
 		if (nameValidation.test(this.state.first) && nameValidation.test(this.state.last)) {
@@ -44,6 +45,7 @@ export class NameFormComponent extends React.Component {
 		}
 	}
 
+	// handle enter key submit
 	handleKeyPress(e) {
 		if (e.key === 'Enter') {
 			if (this.state.canSubmit) {
@@ -53,11 +55,13 @@ export class NameFormComponent extends React.Component {
 	}
 
 	render() {
+		// redirect to the state that was created by the text fields
 		if (this.state.redirect === true) {  
 			return <Redirect push to={`/name/${this.state.first}/${this.state.last}`} />;
 		}
 		return (
 			<div>
+				{/* First name */}
 				<TextField hintText='First Name'
 					value={this.state.first}
 					autoFocus={true}
@@ -67,6 +71,7 @@ export class NameFormComponent extends React.Component {
 						})
 					}}/>
 				
+				{/* Last name */}
 				<TextField hintText='Last Name' 
 					style={{marginLeft: 20}}
 					onKeyPress={this.handleKeyPress} 
@@ -76,6 +81,7 @@ export class NameFormComponent extends React.Component {
 						})
 					}}/>
 				<br/>
+				{/* Submit button */}
 				<RaisedButton 
 					onClick={this.submit} 
 					disabled={!this.state.canSubmit}
@@ -86,6 +92,7 @@ export class NameFormComponent extends React.Component {
 	}  
 }
 
+// Name display component that reads params and calls the API
 export class NameDisplayComponent extends React.Component {
 	constructor(props) {
 		super(props)
@@ -107,6 +114,7 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	componentDidMount() {
+		// search for the job by a person upon opening
 		GetJobByName(this.state.name, (response, err) => {
 			if (err) {
 				//alert(err)
@@ -120,10 +128,12 @@ export class NameDisplayComponent extends React.Component {
 		}) 
 	}
 
+	// get the dates that a person works given the job
 	updateDates() {
 		var team = this.state.job.team.slice(0)
 		var day = this.state.job.day
 
+		// get the dates of a specific team that was found in the componentDidMount() function
 		GetDatesByTeam(day, team, (res, err) => {
             if (err) {
                 this.setState({notLunchClean: true, response: {error: true}})
@@ -133,8 +143,9 @@ export class NameDisplayComponent extends React.Component {
         })
 	}
 
+	// format the information to display
 	getDayDisplay() {
-		if (this.state.job) {
+		if (this.state.job) { // if the job is known, display it
 			return (
 				<div>
 					{
@@ -147,14 +158,14 @@ export class NameDisplayComponent extends React.Component {
 					}
 				</div>
 			)
-		} else if (this.state.error) {
+		} else if (this.state.error) { // if there was an error, display it
 			return (
 				<div>
 					{this.state.error}
 				</div>
 			)
 		}
-		else {
+		else { // the API has not responded yet, so display a loading bar
 			return (
 				<div>
 					Loading job...<br/>
@@ -164,7 +175,9 @@ export class NameDisplayComponent extends React.Component {
 		}
 	}
 
+	// make a formatted table of dates
 	makeTable(days) {
+		var today = new Date()
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -178,7 +191,7 @@ export class NameDisplayComponent extends React.Component {
 				<TableBody displayRowCheckbox={false}>
 					{
 						days.filter(day => {
-							return new Date(day.date) > new Date()
+							return new Date(day.date) > today // only print dates after today
 						}).map(day => {
 							return (
 								<TableRow>
@@ -195,16 +208,17 @@ export class NameDisplayComponent extends React.Component {
 		)
 	}
 
+	// get a table containing the job dates
 	getJobDates() {
-		if (this.state.response !== null) {
-			if (this.state.notLunchClean === false) {
+		if (this.state.response !== null) { // if a response has been made
+			if (this.state.notLunchClean === false) { // make a table if if the person is on lunch clean
 				return this.makeTable(this.state.response.days)
 			} else {
 				return null
 			}
-		} else if (this.state.error) {
+		} else if (this.state.error) { // if an error occured, don't place anything
 			return null
-		} else {
+		} else { // no response from API yet, make a loading display
 			return (
 				<div>
 					<br/><span>Loading job dates...</span><br/>

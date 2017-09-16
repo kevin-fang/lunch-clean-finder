@@ -23,6 +23,12 @@ export const GetTeamsByDate = (date, callback) => {
         })
 }
 
+/**
+ * Get the dates that a team works
+ * @param {string} day Weekday to search for - "Monday", "Tuesday", etc.
+ * @param {string} team Team to search for - "A", "B", "C"
+ * @param {function} callback Callback on response data.
+ */
 export const GetDatesByTeam = (day, team, callback) => {
     axios.get(config.serverip + `/team/${day}/${team}`)
         .then(response => callback(response.data))
@@ -31,6 +37,11 @@ export const GetDatesByTeam = (day, team, callback) => {
         })
 }
 
+/**
+ * Get the dates that a person works
+ * @param {object} name Name to search for - {first: "", last: ""}
+ * @param {function} callback 
+ */
 export const GetDatesByName = (name, callback) => {
     axios.get(config.serverip + `/name/${name.first}/${name.last}`)
         .then((response) => {
@@ -42,8 +53,8 @@ export const GetDatesByName = (name, callback) => {
 }
 
 /**
- * 
- * @param {Object} name Object for names
+ * Get the job that a person has
+ * @param {Object} name Name to search for - {first: "", last: ""}
  * @param {callback} callback Callback(object, error) to call
  */
 export const GetJobByName = (name, callback) => {
