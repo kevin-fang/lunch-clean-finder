@@ -100,7 +100,7 @@ export default class TodayComponent extends React.Component {
     render() {
         if (this.state.weekend && this.state.today.team === undefined) {
             this.fixWeekendDate(this.getNextMonday(new Date(this.state.today.date)))
-            return <div>Loading...</div>
+            return <CircularProgress />
         } else if (this.state.weekend) {
             return (
                 <div>
