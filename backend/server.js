@@ -56,6 +56,7 @@ app.get('/date', (req, res) => {
         res.send(JSON.stringify({weekend: true, day: "Saturday"}))
     } else {
         api.getByDate(auth, date).then((response) => {
+            response[0].weekend = false
             res.send(JSON.stringify(response[0]))
         }).catch(err => {
             res.send(JSON.stringify({error: "date not found", date: JSON.stringify(date)}))
