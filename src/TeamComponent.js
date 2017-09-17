@@ -151,7 +151,7 @@ export class TeamDisplayComponent extends React.Component {
                 <span style={{fontSize: 18}}>Day: {this.day}</span><br/>
                 {this.state.response 
                     ?   this.makeTable(this.state.response.days)
-                    : <CircularProgress />}
+                    : <CircularProgress style={{padding: 36}} size={80}/>}
             </div>
         )
     }

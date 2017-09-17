@@ -156,19 +156,21 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	getWorkingTodayDisplay() {
+		const workingToday = <div style={{fontSize: 28}}>You are working today</div>
+		const notWorkingToday = <div style={{fontSize: 28}}>You are not working today</div>
 		if (this.state.workingToday) { // if simply working today, display so
-			return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
+			return workingToday
 		} else if (this.state.job.job === "Recess Cleanup") { // if recess cleanup, then need to check if today is the specific weekday
 			var today = new Date()
 			// compare if today is equal to the job provided by API
 			if (weekdays[today.getDay()] === this.state.job.day) {
-				return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
+				return workingToday
 			} else {
-				return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
+				return notWorkingToday
 			}
 		// if response has been received and the person is on lunch clean but not working today
 		} else if (this.state.response !== null && this.state.notLunchClean === false) {
-			return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
+			return notWorkingToday
 		} else { // don't want to display anything when API hasn't responded yet.
 			return null
 		}
@@ -182,7 +184,7 @@ export class NameDisplayComponent extends React.Component {
 					{
 						this.state.error !== "" ? this.state.error : 
 						<div>
-							{this.getWorkingTodayDisplay()}
+							{this.getWorkingTodayDisplay()}<br/>
 							{this.state.job.job !== "N/A"  && <div style={{fontSize: 18}}>Job: {this.state.job.job}<br/></div>}
 							{this.state.job.team !== "N/A"  && <div style={{fontSize: 18}}>Team: {this.state.job.team} on {this.state.job.day}<br/></div>}
 							
@@ -193,9 +195,7 @@ export class NameDisplayComponent extends React.Component {
 			)
 		} else if (this.state.error) { // if there was an error, display it
 			return (
-				<div>
-					{this.state.error}
-				</div>
+				<div>{this.state.error}</div>
 			)
 		}
 		else { // the API has not responded yet, so display a loading bar
@@ -271,7 +271,7 @@ export class NameDisplayComponent extends React.Component {
 	render() {
 		return (
 			<div style={{padding: 24}}> 
-				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
+				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div>
 
 				{this.getDayDisplay()}<br/>
 				{	// only show next job dates if person is on lunch clean
