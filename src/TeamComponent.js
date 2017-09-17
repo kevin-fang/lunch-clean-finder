@@ -140,7 +140,7 @@ export class TeamDisplayComponent extends React.Component {
 							return new Date(day.date) > today // only print dates after today
 						}).map(day => {
 							return (
-								<TableRow>
+								<TableRow key={day.date}>
 									<TableRowColumn style={dateStyle}>{day.date}</TableRowColumn>
 									<TableRowColumn style={teamStyle}>{day.team}</TableRowColumn>
 									<TableRowColumn style={smallNotes}>{day.notes}</TableRowColumn>
@@ -158,8 +158,8 @@ export class TeamDisplayComponent extends React.Component {
             <div style={{padding: 20}}>
                 {
                     this.state.workingToday 
-                        ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]} is working today</span> 
-                        : <span style={{fontSize: 24}}>Team {config.teamNames[this.team]} is not working today</span> 
+                        ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is working today</span> 
+                        : <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is not working today</span> 
                 }<br/><br/>
                 <span style={{fontSize: 18}}>Team: {config.teamNames[this.team]}</span><br/>
                 <span style={{fontSize: 18}}>Day: {this.day}</span><br/><br/>

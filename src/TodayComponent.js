@@ -58,9 +58,9 @@ export default class TodayComponent extends React.Component {
                 alert(err)
             } else if (response) {
                 if (response.weekend === false) {
-                    this.setState({today: response, weekend: false})
+                    this.setState({ today: response, weekend: false })
                 } else {
-                    this.setState({weekend: true, today: {date: new Date()}})
+                    this.setState({ weekend: true, today: { date: new Date() } })
                 }
             }
         })
@@ -71,7 +71,7 @@ export default class TodayComponent extends React.Component {
             if (err) {
                 alert(err)
             } else if (response) {
-                this.setState({today: response, weekend: true})
+                this.setState({ today: response, weekend: true })
             }
         })
     }
@@ -79,14 +79,14 @@ export default class TodayComponent extends React.Component {
     getWorkingTeams(message) {
         return (
             <div>
-                <span style={{fontSize: 18, marginTop: 16}}><br/>
-                {message}
-                <ul style={{listStyle: 'none'}}>
-                    {this.state.today.team.split("")
-                        .map(letter => (teams[letter]))
-                        .map(name => (<li key={name}>{name}</li>))}
-                </ul>
-                </span> <br/>
+                <span style={{ fontSize: 18, marginTop: 16 }}><br />
+                    {message}
+                    <ul style={{ listStyle: 'none' }}>
+                        {this.state.today.team.split("")
+                            .map(letter => (teams[letter]))
+                            .map(name => (<li key={name}>{name}</li>))}
+                    </ul>
+                </span> <br />
             </div>
         )
     }
@@ -100,13 +100,13 @@ export default class TodayComponent extends React.Component {
     render() {
         if (this.state.weekend && this.state.today.team === undefined) {
             this.fixWeekendDate(this.getNextMonday(new Date(this.state.today.date)))
-            return <CircularProgress style={{padding: 12}} size={80}/>
+            return <CircularProgress style={{ padding: 12 }} size={80} />
         } else if (this.state.weekend) {
             return (
-                <div style={{padding: 24}}>
+                <div style={{ padding: 24 }}>
                     {this.state.today &&
                         <div>
-                            <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
+                            <span style={{ fontSize: 36 }}>{formatDate(new Date())}</span><br />
                             {this.getWorkingTeams("Teams working next Monday:")}
                         </div>
                     }
@@ -114,15 +114,15 @@ export default class TodayComponent extends React.Component {
             )
         }
         return (
-            <div style={{padding: 24}}>
-                {this.state.today 
+            <div style={{ padding: 24 }}>
+                {this.state.today
                     ? <div>
-                        <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
+                        <span style={{ fontSize: 36 }}>{formatDate(new Date())}</span><br />
                         {this.state.weekend === false && this.getWorkingTeams("Teams working today:")}
                     </div>
-                    :   <div>
-                            <CircularProgress style={{padding: 12}} size={80}/><br/>
-                        </div>
+                    : <div>
+                        <CircularProgress style={{ padding: 12 }} size={80} /><br />
+                    </div>
                 }
             </div>
         )
