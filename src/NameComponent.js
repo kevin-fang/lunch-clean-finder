@@ -103,9 +103,9 @@ export class NameDisplayComponent extends React.Component {
 				last: props.match.params.last.nameify()
 			},
 			job: null,
-			days: null,
 			error: "",
 			response: null,
+			workingToday: false,
 			notLunchClean: false
 		}
 		this.getDayDisplay = this.getDayDisplay.bind(this)
@@ -139,7 +139,16 @@ export class NameDisplayComponent extends React.Component {
             if (err) {
                 this.setState({notLunchClean: true, response: {error: true}})
             } else {
-                this.setState({response: res})
+				this.setState({response: res})
+				var today = new Date()
+				today.setHours(0, 0, 0, 0)
+				res.days.forEach((workingDay) => {
+					var testDate = new Date(workingDay.date)
+					testDate.setHours(0, 0, 0, 0)
+					if (testDate.valueOf() === today.valueOf()) {
+						this.setState({workingToday: true})
+					}
+				})
             }
         })
 	}
@@ -152,8 +161,14 @@ export class NameDisplayComponent extends React.Component {
 					{
 						this.state.error !== "" ? this.state.error : 
 						<div>
+							{
+								(this.state.workingToday === true) 
+									? <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
+									: this.state.response !== null ? <div style={{fontSize: 18}}>You <b>are not</b> working today</div> : null
+							}
 							{this.state.job.job !== "N/A"  && <div style={{fontSize: 18}}>Job: {this.state.job.job}<br/></div>}
 							{this.state.job.team !== "N/A"  && <div style={{fontSize: 18}}>Team: {this.state.job.team} on {this.state.job.day}<br/></div>}
+							
 							{(this.state.job.day !== "N/A" && !(this.state.job.team !== "N/A")) && <div style={{fontSize: 18}}>Day: {this.state.job.day}<br/></div>}
 						</div>
 					}
@@ -237,12 +252,15 @@ export class NameDisplayComponent extends React.Component {
 
 	render() {
 		return (
-			<div> 
-				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div>
-				<div>Bookmark this page for future use!</div><br/>
+			<div style={{padding: 24}}> 
+				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
 
-				{this.getDayDisplay()}
-				{this.getJobDates()}
+				{this.getDayDisplay()}<br/>
+				<div style={{fontSize: 16}}>
+					Next job dates:
+				</div>
+				{this.getJobDates()}<br/><br/>
+				<div style={{fontSize: 14}}>Tip: bookmark this page for future use!</div><br/>
 				
 			</div>
 		)

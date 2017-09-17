@@ -9,7 +9,7 @@ export class Main extends React.Component {
 
 	render() {
 		return (
-			<main style={{margin: 24}}>
+			<main style={{margin: 8}}>
 				{/* set up routing */}
 				<Switch>
 					<Route exact path='/' component={TodayComponent}/>

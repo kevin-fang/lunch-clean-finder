@@ -61,7 +61,7 @@ export default class Header extends React.Component {
         return (
             <div> 
                 {/* Render the application bar with info button and navigation menu*/}
-                <AppBar title="Commonwealth School Student Jobs" 
+                <AppBar title="Student Jobs - Commonwealth School" 
                     onLeftIconButtonTouchTap={this.openNavMenu} 
                     iconElementRight={
                         <FlatButton 
@@ -74,7 +74,7 @@ export default class Header extends React.Component {
                     open={this.state.infoOpen}
                     title={<div><b>About</b></div>}
                     actions={actions}
-                    contentStyle={{width: '30%'}}
+                    contentStyle={{width: 300}}
                     onRequestClose={this.handleDialogClose}>
                         Made by <b>Kevin Fang</b>, class of 2018<br/>
                         <ul style={{padding: 8, margin: 4}}>

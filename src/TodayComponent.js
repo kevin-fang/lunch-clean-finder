@@ -103,18 +103,18 @@ export default class TodayComponent extends React.Component {
             return <CircularProgress />
         } else if (this.state.weekend) {
             return (
-                <div>
-                {this.state.today &&
-                    <div>
-                        <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
-                        {this.getWorkingTeams("Teams working next Monday:")}
-                    </div>
-                }
-            </div>
+                <div style={{padding: 24}}>
+                    {this.state.today &&
+                        <div>
+                            <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
+                            {this.getWorkingTeams("Teams working next Monday:")}
+                        </div>
+                    }
+                </div>
             )
         }
         return (
-            <div>
+            <div style={{padding: 24}}>
                 {this.state.today 
                     ? <div>
                         <span style={{fontSize: 36}}>{formatDate(new Date())}</span><br/>
