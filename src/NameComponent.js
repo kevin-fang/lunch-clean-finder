@@ -156,19 +156,20 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	getWorkingTodayDisplay() {
-		if (this.state.workingToday) {
+		if (this.state.workingToday) { // if simply working today, display so
 			return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
-		} else if (this.state.job.job === "Recess Cleanup") {
-			//alert(JSON.stringify(this.state.job))
+		} else if (this.state.job.job === "Recess Cleanup") { // if recess cleanup, then need to check if today is the specific weekday
 			var today = new Date()
+			// compare if today is equal to the job provided by API
 			if (weekdays[today.getDay()] === this.state.job.day) {
 				return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
 			} else {
 				return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
 			}
+		// if response has been received and the person is on lunch clean but not working today
 		} else if (this.state.response !== null && this.state.notLunchClean === false) {
 			return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
-		} else {
+		} else { // don't want to display anything when API hasn't responded yet.
 			return null
 		}
 	}
@@ -218,6 +219,7 @@ export class NameDisplayComponent extends React.Component {
 		var teamStyle = {
 			width: 20
 		}
+		// create a table with mapping dates to rows
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -272,7 +274,7 @@ export class NameDisplayComponent extends React.Component {
 				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
 
 				{this.getDayDisplay()}<br/>
-				{	
+				{	// only show next job dates if person is on lunch clean
 					this.state.notLunchClean === false && 
 						<div style={{fontSize: 16}}>
 							Next job dates:
