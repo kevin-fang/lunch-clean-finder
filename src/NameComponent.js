@@ -16,6 +16,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import RaisedButton from 'material-ui/RaisedButton'
 
 require('./util.js')
+var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satruday"]
 
 // Form that takes name as input and submits it, redirecting to the NameDisplayComponent
 export class NameFormComponent extends React.Component {
@@ -112,6 +113,7 @@ export class NameDisplayComponent extends React.Component {
 		this.updateDates = this.updateDates.bind(this)
 		this.makeTable = this.makeTable.bind(this)
 		this.getJobDates = this.getJobDates.bind(this)
+		this.getWorkingTodayDisplay = this.getWorkingTodayDisplay.bind(this)
 	}
 
 	componentDidMount() {
@@ -153,6 +155,24 @@ export class NameDisplayComponent extends React.Component {
         })
 	}
 
+	getWorkingTodayDisplay() {
+		if (this.state.workingToday) {
+			return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
+		} else if (this.state.job.job === "Recess Cleanup") {
+			//alert(JSON.stringify(this.state.job))
+			var today = new Date()
+			if (weekdays[today.getDay()] === this.state.job.day) {
+				return <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
+			} else {
+				return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
+			}
+		} else if (this.state.response !== null && this.state.notLunchClean === false) {
+			return <div style={{fontSize: 24}}>You <b>are not</b> working today</div>
+		} else {
+			return null
+		}
+	}
+
 	// format the information to display
 	getDayDisplay() {
 		if (this.state.job) { // if the job is known, display it
@@ -161,11 +181,7 @@ export class NameDisplayComponent extends React.Component {
 					{
 						this.state.error !== "" ? this.state.error : 
 						<div>
-							{
-								(this.state.workingToday === true) 
-									? <div style={{fontSize: 24}}>You <b>are</b> working today</div> 
-									: this.state.response !== null ? <div style={{fontSize: 18}}>You <b>are not</b> working today</div> : null
-							}
+							{this.getWorkingTodayDisplay()}
 							{this.state.job.job !== "N/A"  && <div style={{fontSize: 18}}>Job: {this.state.job.job}<br/></div>}
 							{this.state.job.team !== "N/A"  && <div style={{fontSize: 18}}>Team: {this.state.job.team} on {this.state.job.day}<br/></div>}
 							
@@ -256,9 +272,12 @@ export class NameDisplayComponent extends React.Component {
 				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div><br/>
 
 				{this.getDayDisplay()}<br/>
-				<div style={{fontSize: 16}}>
-					Next job dates:
-				</div>
+				{	
+					this.state.notLunchClean === false && 
+						<div style={{fontSize: 16}}>
+							Next job dates:
+						</div>
+				}
 				{this.getJobDates()}<br/><br/>
 				<div style={{fontSize: 14}}>Tip: bookmark this page for future use!</div><br/>
 				
