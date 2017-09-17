@@ -60,7 +60,7 @@ export class NameFormComponent extends React.Component {
 			return <Redirect push to={`/name/${this.state.first}/${this.state.last}`} />;
 		}
 		return (
-			<div>
+			<div style={{padding: 20}}>
 				<div>
 					{/* First name */}
 					<TextField hintText='First Name'
