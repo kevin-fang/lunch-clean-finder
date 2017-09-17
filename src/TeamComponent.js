@@ -89,7 +89,8 @@ export class TeamDisplayComponent extends React.Component {
         this.team = props.match.params.teamname.slice(0, 1).toUpperCase()
         this.day = props.match.params.day.nameify()
         this.state = {
-            response: null
+            response: null,
+            workingToday: false
         }
         this.makeTable = this.makeTable.bind(this)
     }
@@ -100,7 +101,15 @@ export class TeamDisplayComponent extends React.Component {
             if (err) {
                 alert(err)
             } else {
+                var today = new Date()
                 this.setState({response: res})
+                res.days.forEach((workingDay) => {
+					var testDate = new Date(workingDay.date)
+					testDate.setHours(0, 0, 0, 0)
+					if (testDate.valueOf() === today.valueOf()) {
+						this.setState({workingToday: true})
+					}
+				})
             }
         })
     }
@@ -146,11 +155,19 @@ export class TeamDisplayComponent extends React.Component {
     
     render() {
         return (
-            <div>
+            <div style={{padding: 20}}>
+                {
+                    this.state.workingToday 
+                        ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]} is working today</span> 
+                        : <span style={{fontSize: 24}}>Team {config.teamNames[this.team]} is not working today</span> 
+                }<br/><br/>
                 <span style={{fontSize: 18}}>Team: {config.teamNames[this.team]}</span><br/>
-                <span style={{fontSize: 18}}>Day: {this.day}</span><br/>
+                <span style={{fontSize: 18}}>Day: {this.day}</span><br/><br/>
                 {this.state.response 
-                    ?   this.makeTable(this.state.response.days)
+                    ?   <div>
+                            Next job dates:
+                            {this.makeTable(this.state.response.days)}
+                        </div>
                     : <CircularProgress style={{padding: 36}} size={80}/>}
             </div>
         )
