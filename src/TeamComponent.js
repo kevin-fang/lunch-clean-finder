@@ -90,7 +90,7 @@ export class TeamDisplayComponent extends React.Component {
         this.day = props.match.params.day.nameify()
         this.state = {
             response: null,
-            workingToday: false
+            workingToday: null
         }
         this.makeTable = this.makeTable.bind(this)
     }
@@ -106,6 +106,7 @@ export class TeamDisplayComponent extends React.Component {
                 res.days.forEach((workingDay) => {
 					var testDate = new Date(workingDay.date)
 					testDate.setHours(0, 0, 0, 0)
+                    today.setHours(0, 0, 0, 0)
 					if (testDate.valueOf() === today.valueOf()) {
 						this.setState({workingToday: true})
 					}
@@ -159,7 +160,7 @@ export class TeamDisplayComponent extends React.Component {
                 {
                     this.state.workingToday 
                         ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is working today</span> 
-                        : <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is not working today</span> 
+                        : this.state.workingToday === false ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is not working today</span> : null
                 }<br/><br/>
                 <span style={{fontSize: 18}}>Team: {config.teamNames[this.team]}</span><br/>
                 <span style={{fontSize: 18}}>Day: {this.day}</span><br/><br/>

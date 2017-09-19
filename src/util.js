@@ -9,3 +9,10 @@ String.prototype.nameify = function() {
         return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
     }
 }
+
+Date.prototype.isToday = function() {
+	this.setHours(0, 0, 0, 0)
+	var today = new Date()
+	today.setHours(0, 0, 0, 0)
+	return this.valueOf() === today.valueOf()
+}
