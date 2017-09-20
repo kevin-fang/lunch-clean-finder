@@ -109,11 +109,6 @@ export class NameDisplayComponent extends React.Component {
 			workingToday: false,
 			notLunchClean: false
 		}
-		this.getDayDisplay = this.getDayDisplay.bind(this)
-		this.updateDates = this.updateDates.bind(this)
-		this.makeTable = this.makeTable.bind(this)
-		this.getJobDates = this.getJobDates.bind(this)
-		this.getWorkingTodayDisplay = this.getWorkingTodayDisplay.bind(this)
 	}
 
 	componentDidMount() {
@@ -132,7 +127,7 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	// get the dates that a person works given the job
-	updateDates() {
+	updateDates = () => {
 		var team = this.state.job.team.slice(0)
 		var day = this.state.job.day
 
@@ -142,12 +137,8 @@ export class NameDisplayComponent extends React.Component {
                 this.setState({notLunchClean: true, response: {error: true}})
             } else {
 				this.setState({response: res})
-				var today = new Date()
-				today.setHours(0, 0, 0, 0)
 				res.days.forEach((workingDay) => {
-					var testDate = new Date(workingDay.date)
-					testDate.setHours(0, 0, 0, 0)
-					if (testDate.valueOf() === today.valueOf()) {
+					if (new Date(workingDay).isToday()) {
 						this.setState({workingToday: true})
 					}
 				})
@@ -155,7 +146,7 @@ export class NameDisplayComponent extends React.Component {
         })
 	}
 
-	getWorkingTodayDisplay() {
+	getWorkingTodayDisplay = () => {
 		const workingToday = <div style={{fontSize: 28}}>You are working today</div>
 		const notWorkingToday = <div style={{fontSize: 28}}>You are not working today</div>
 		if (this.state.workingToday) { // if simply working today, display so
@@ -177,7 +168,7 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	// format the information to display
-	getDayDisplay() {
+	getDayDisplay = () => {
 		if (this.state.job) { // if the job is known, display it
 			return (
 				<div>
@@ -209,7 +200,7 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	// make a formatted table of dates
-	makeTable(days) {
+	makeTable = (days) => {
 		var today = new Date()
 		var smallNotes = {
 		}
@@ -249,7 +240,7 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	// get a table containing the job dates
-	getJobDates() {
+	getJobDates = () => {
 		if (this.state.response !== null) { // if a response has been made
 			if (this.state.notLunchClean === false) { // make a table if if the person is on lunch clean
 				return this.makeTable(this.state.response.days)

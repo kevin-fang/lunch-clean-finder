@@ -24,39 +24,36 @@ require('./util.js')
 export class TeamFormComponent extends React.Component {
     constructor(props) {
         super(props)
-        this.submit = this.submit.bind(this)
         this.state = {
             redirect: false,
             teamToSubmit: "A: Asparagus",
             dayToSubmit: "Monday"
         }
         this.teams = config.teams
-        this.handleTeamChange = this.handleTeamChange.bind(this)
-        this.handleDayChange = this.handleDayChange.bind(this)
     }
 
     // handle a team change from the dropdown menu
-    handleTeamChange(event, index, value) {
+    handleTeamChange = (event, index, value) => {
         this.setState({
             teamToSubmit: config.teams[index]
         })
     }
 
     // handle a day change from the dropdown menu
-    handleDayChange(event, index, value) {
+    handleDayChange = (event, index, value) => {
         this.setState({
             dayToSubmit: value
         })
     }
 
     // tell the page to redirect 
-    submit(event) {
+    submit = (event) => {
         this.setState({
             redirect: true
         })
     }
 
-    render() {
+    render = () => {
         // redirect if needed
         if (this.state.redirect === true) {
             return <Redirect push to={`/team/${this.state.dayToSubmit}/${this.state.teamToSubmit.slice(0, 1)}`}/>
@@ -92,7 +89,6 @@ export class TeamDisplayComponent extends React.Component {
             response: null,
             workingToday: null
         }
-        this.makeTable = this.makeTable.bind(this)
     }
 
     // once the page loads, get all the dates 
@@ -101,22 +97,21 @@ export class TeamDisplayComponent extends React.Component {
             if (err) {
                 alert(err)
             } else {
-                var today = new Date()
                 this.setState({response: res})
                 res.days.forEach((workingDay) => {
 					var testDate = new Date(workingDay.date)
-					testDate.setHours(0, 0, 0, 0)
-                    today.setHours(0, 0, 0, 0)
-					if (testDate.valueOf() === today.valueOf()) {
-						this.setState({workingToday: true})
-					}
+					if (testDate.isToday()) {
+						this.setState({workingToday: true}, () => {return})
+					} else if (this.state.workingToday === null) {
+                        this.setState({workingToday: false})
+                    }
 				})
             }
         })
     }
 
     // create a table with the days
-    makeTable(days) {
+    makeTable = (days) => {
 		var today = new Date()
 		var smallNotes = {
 		}

@@ -36,7 +36,9 @@ function addSuffix(num) {
 
 // format a date. new Date('9/8/2017') => "It is Friday, September 8"
 function formatDate(date) {
-    return "Today is " + days[date.getDay()] + ", " + months[date.getMonth()] + " " + addSuffix(date.getDate());
+    var formattedDate = "Today is " + days[date.getDay()] + ", "
+        + months[date.getMonth()] + " " + addSuffix(date.getDate())
+    return <span style={{fontFamily: 'Roboto', fontWeight: 200, fontSize: 140}}>{formattedDate}</span>
 }
 
 export default class TodayComponent extends React.Component {
@@ -47,12 +49,9 @@ export default class TodayComponent extends React.Component {
             today: null,
             weekend: false
         }
-        this.getWorkingTeams = this.getWorkingTeams.bind(this)
-        this.getNextMonday = this.getNextMonday.bind(this)
-        this.fixWeekendDate = this.fixWeekendDate.bind(this)
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         GetToday((response, err) => {
             if (err) {
                 alert(err)
@@ -66,7 +65,7 @@ export default class TodayComponent extends React.Component {
         })
     }
 
-    fixWeekendDate(date) {
+    fixWeekendDate = (date) => {
         GetTeamsByDate(date, (response, err) => {
             if (err) {
                 alert(err)
@@ -76,28 +75,29 @@ export default class TodayComponent extends React.Component {
         })
     }
 
-    getWorkingTeams(message) {
+    getWorkingTeams = (message) => {
         return (
             <div>
                 <span style={{ fontSize: 18, marginTop: 16 }}><br />
-                    {message}
-                    <ul style={{ listStyle: 'none' }}>
+                    {/*<div style={{fontSize: 68, margin: 0, fontFamily: 'Roboto', fontWeight: 300}}>{message}</div>*/}
+                    <ul style={{ listStyle: 'none', margin: '0', marginTop: 20}}>
                         {this.state.today.team.split("")
                             .map(letter => (teams[letter]))
-                            .map(name => (<li key={name}>{name}</li>))}
+                            .map(name => (<li style={{fontSize: 72, fontWeight: 600, margin: 0}} key={name}>{name}</li>))}
                     </ul>
                 </span> <br />
             </div>
         )
     }
 
-    getNextMonday(date) {
+    getNextMonday = (date) => {
         // add 1 and then add a week, mod 7.
         date.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7)
         return date
     }
 
-    render() {
+    render = () => {
+        // if today is the weekend, check next monday
         if (this.state.weekend && this.state.today.team === undefined) {
             this.fixWeekendDate(this.getNextMonday(new Date(this.state.today.date)))
             return <CircularProgress style={{ padding: 12 }} size={80} />
@@ -106,6 +106,7 @@ export default class TodayComponent extends React.Component {
                 <div style={{ padding: 24 }}>
                     {this.state.today &&
                         <div>
+                            {formatDate(new Date())}
                             <span style={{ fontSize: 36 }}>{formatDate(new Date())}</span><br />
                             {this.getWorkingTeams("Teams working next Monday:")}
                         </div>
@@ -114,16 +115,18 @@ export default class TodayComponent extends React.Component {
             )
         }
         return (
-            <div style={{ padding: 24 }}>
-                {this.state.today
-                    ? <div>
-                        <span style={{ fontSize: 36 }}>{formatDate(new Date())}</span><br />
-                        {this.state.weekend === false && this.getWorkingTeams("Teams working today:")}
-                    </div>
-                    : <div>
-                        <CircularProgress style={{ padding: 12 }} size={80} /><br />
-                    </div>
-                }
+            <div style={{ backgroundImage: `url('table.jpg')`}}>
+                <div style={{ padding: 24 }}>
+                    {this.state.today
+                        ? <div style={{textAlign: 'center', marginTop: 60}}>
+                            {formatDate(new Date())}<br/>
+                            {this.state.weekend === false && this.getWorkingTeams("Working Today")}
+                        </div>
+                        : <div>
+                            <CircularProgress style={{ padding: 12 }} size={80} /><br />
+                        </div>
+                    }
+                </div>
             </div>
         )
     }
