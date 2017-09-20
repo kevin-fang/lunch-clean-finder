@@ -63,6 +63,7 @@ export class NameFormComponent extends React.Component {
 		return (
 			<div style={{padding: 20}}>
 				<div>
+					Type names <b>exactly</b> as how they appear on the spreadsheet<br/><br/>
 					{/* First name */}
 					<TextField hintText='First Name'
 						value={this.state.first}
@@ -72,7 +73,7 @@ export class NameFormComponent extends React.Component {
 							this.setState({first: event.target.value}, () => {
 								this.updateEnabled()
 							})
-						}}/>
+						}}/><br/>
 					{/* Last name */}
 					<TextField hintText='Last Name' 
 						onKeyPress={this.handleKeyPress} 
