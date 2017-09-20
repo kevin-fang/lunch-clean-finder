@@ -85,7 +85,7 @@ export default class TodayComponent extends React.Component {
                     <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
                         {this.state.today.team.split("")
                             .map(letter => (teams[letter]))
-                            .map(name => (<li style={{fontSize: 48, fontWeight: 600, margin: 0}} key={name}>{name}</li>))}
+                            .map(name => (<li style={{fontSize: 48, fontWeight: 400, margin: 0}} key={name}>{name}</li>))}
                     </ul>
                 </span> <br />
             </div>

@@ -60,13 +60,13 @@ export class TeamFormComponent extends React.Component {
         }
         // create dropdown menus and submit button
         return (
-            <div>
+            <div style={{margin: 20}}>
                 <DropDownMenu value={this.state.dayToSubmit}
                     autoWidth={false}
                     style={{minWidth: '200px', maxWidth: '200px'}}
                     onChange={this.handleDayChange}>
                     {weekdays.map((weekday) => <MenuItem primaryText={weekday} key={weekday} value={weekday}/>)}
-                </DropDownMenu>
+                </DropDownMenu><br/>
                 <DropDownMenu value={this.state.teamToSubmit}
                     autoWidth={false}
                     style={{minWidth: '200px', maxWidth: '200px'}}
