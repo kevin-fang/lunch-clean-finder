@@ -138,7 +138,7 @@ export class NameDisplayComponent extends React.Component {
             } else {
 				this.setState({response: res})
 				res.days.forEach((workingDay) => {
-					if (new Date(workingDay).isToday()) {
+					if (new Date(workingDay.date).isToday()) {
 						this.setState({workingToday: true})
 					}
 				})
@@ -201,7 +201,6 @@ export class NameDisplayComponent extends React.Component {
 
 	// make a formatted table of dates
 	makeTable = (days) => {
-		var today = new Date()
 		var smallNotes = {
 		}
 		var dateStyle = {
@@ -223,10 +222,12 @@ export class NameDisplayComponent extends React.Component {
 				<TableBody displayRowCheckbox={false}>
 					{
 						days.filter(day => {
-							return new Date(day.date) > today // only print dates after today
+							var today = new Date()
+							today.setHours(0, 0, 0, 0)
+							return new Date(day.date) >= today // only print dates after today
 						}).map(day => {
 							return (
-								<TableRow>
+								<TableRow key={day.date}>
 									<TableRowColumn style={dateStyle}>{day.date}</TableRowColumn>
 									<TableRowColumn style={teamStyle}>{day.team}</TableRowColumn>
 									<TableRowColumn style={smallNotes}>{day.notes}</TableRowColumn>
