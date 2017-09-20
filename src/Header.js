@@ -65,6 +65,7 @@ export default class Header extends React.Component {
                     onLeftIconButtonTouchTap={this.openNavMenu} 
                     iconElementRight={
                         <FlatButton 
+                            style={{width: 2}}
                             icon={<Info />}
                         />}
                     onRightIconButtonTouchTap={(event) => this.openInfoDialog()}

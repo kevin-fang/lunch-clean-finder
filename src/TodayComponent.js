@@ -36,9 +36,11 @@ function addSuffix(num) {
 
 // format a date. new Date('9/8/2017') => "It is Friday, September 8"
 function formatDate(date) {
-    var formattedDate = "Today is " + days[date.getDay()] + ", "
-        + months[date.getMonth()] + " " + addSuffix(date.getDate())
-    return <span style={{fontFamily: 'Roboto', fontWeight: 200, fontSize: 140}}>{formattedDate}</span>
+    var formattedDate = 
+        <div>
+            <div>Today is {days[date.getDay()]}, {months[date.getMonth()]} {addSuffix(date.getDate())}</div>
+        </div>
+    return <span style={{fontFamily: 'Roboto', fontWeight: 200, fontSize: 68}}>{formattedDate}</span>
 }
 
 export default class TodayComponent extends React.Component {
@@ -78,12 +80,12 @@ export default class TodayComponent extends React.Component {
     getWorkingTeams = (message) => {
         return (
             <div>
-                <span style={{ fontSize: 18, marginTop: 16 }}><br />
+                <span style={{ fontSize: 18 }}><br/>
                     {/*<div style={{fontSize: 68, margin: 0, fontFamily: 'Roboto', fontWeight: 300}}>{message}</div>*/}
-                    <ul style={{ listStyle: 'none', margin: '0', marginTop: 20}}>
+                    <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
                         {this.state.today.team.split("")
                             .map(letter => (teams[letter]))
-                            .map(name => (<li style={{fontSize: 72, fontWeight: 600, margin: 0}} key={name}>{name}</li>))}
+                            .map(name => (<li style={{fontSize: 48, fontWeight: 600, margin: 0}} key={name}>{name}</li>))}
                     </ul>
                 </span> <br />
             </div>
@@ -107,7 +109,7 @@ export default class TodayComponent extends React.Component {
                     {this.state.today &&
                         <div>
                             {formatDate(new Date())}
-                            <span style={{ fontSize: 36 }}>{formatDate(new Date())}</span><br />
+                            <span>{formatDate(new Date())}</span><br />
                             {this.getWorkingTeams("Teams working next Monday:")}
                         </div>
                     }
@@ -116,10 +118,10 @@ export default class TodayComponent extends React.Component {
         }
         return (
             <div style={{ backgroundImage: `url('table.jpg')`}}>
-                <div style={{ padding: 24 }}>
+                <div style={{ padding: 12}}>
                     {this.state.today
-                        ? <div style={{textAlign: 'center', marginTop: 60}}>
-                            {formatDate(new Date())}<br/>
+                        ? <div style={{textAlign: 'center', marginTop: 20}}>
+                            {formatDate(new Date())}
                             {this.state.weekend === false && this.getWorkingTeams("Working Today")}
                         </div>
                         : <div>
