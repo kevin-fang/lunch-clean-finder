@@ -53,6 +53,7 @@ export default class TodayComponent extends React.Component {
         }
     }
 
+    // call the API for today's date
     componentDidMount = () => {
         GetToday((response, err) => {
             if (err) {
@@ -67,6 +68,7 @@ export default class TodayComponent extends React.Component {
         })
     }
 
+    // call the api on the Monday if today is Saturday/Sunday
     fixWeekendDate = (date) => {
         GetTeamsByDate(date, (response, err) => {
             if (err) {
@@ -82,28 +84,42 @@ export default class TodayComponent extends React.Component {
         return (
             <div>
                 <span style={{ fontSize: 18 }}><br/>
-                    {/*<div style={{fontSize: 68, margin: 0, fontFamily: 'Roboto', fontWeight: 300}}>{message}</div>*/}
-                    {this.state.today.team !== 'N/A' ? 
-                        <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
-                            {this.state.today.team.split("")
-                                .filter(letter => letter !== 'N')
-                                .map(letter => (teams[letter]))
-                                .map(name => (<li style={{fontSize: 48, fontWeight: 400, margin: 0}} key={name}>{name}</li>))}
-                        </ul>
-                    : <span style={{fontSize: 48, fontWeight: 400, margin: 0}}>No teams working today</span>}
+                    {/* create a list of the teams working today*/}
+                    { this.state.today.team !== 'N/A' 
+                        ?   <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
+                                {
+                                    this.state.today.team.split("")
+                                        .filter(letter => letter !== 'N')
+                                        .map(letter => (teams[letter]))
+                                        .map(name => (
+                                            <li style={{fontSize: 48, fontWeight: 400, margin: 0}} key={name}>{name}</li>
+                                            )
+                                        )
+                                }
+                            </ul>
+
+                        :   <span style={{fontSize: 48, fontWeight: 400, margin: 0}}>No teams working today</span>
+                    }
+                    {/* display any notes from the spreadsheet if they exist*/}
+                    { 
+                        this.state.today.notes !== "" && 
+                            <div style={{paddingTop: 24}}>
+                                <span style={{fontSize: 24}}>{this.state.today.notes}</span>
+                            </div>
+                    }
                 </span> <br />
             </div>
         )
     }
 
     getNextMonday = (date) => {
-        // add 1 and then add a week, mod 7.
+        // add 1 and then add a week, mod 7 to get the next monday
         date.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7)
         return date
     }
 
     render = () => {
-        // if today is the weekend, check next monday
+        // if today is the weekend, check next monday and display that
         if (this.state.weekend && this.state.today.team === undefined) {
             this.fixWeekendDate(this.getNextMonday(new Date(this.state.today.date)))
             return <CircularProgress style={{ padding: 12 }} size={80} />
@@ -122,7 +138,7 @@ export default class TodayComponent extends React.Component {
             )
         }
         return (
-            <div style={{ backgroundImage: `url('table.jpg')`}}>
+            <div>
                 <div style={{ padding: 12}}>
                     {this.state.today
                         ? <div style={{textAlign: 'center', marginTop: 20}}>
