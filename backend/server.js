@@ -113,5 +113,5 @@ api.verifyOauth((err, authKey) => {
 // start server on config port
 function startServer() {
     app.listen(config.port)
-    log("Server listening on port: " + config.port)
+    log("Server listening on port: " + config.port + '\n')
 }

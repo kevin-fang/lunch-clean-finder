@@ -77,16 +77,20 @@ export default class TodayComponent extends React.Component {
         })
     }
 
+    // returns the teams working on a specific date
     getWorkingTeams = (message) => {
         return (
             <div>
                 <span style={{ fontSize: 18 }}><br/>
                     {/*<div style={{fontSize: 68, margin: 0, fontFamily: 'Roboto', fontWeight: 300}}>{message}</div>*/}
-                    <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
-                        {this.state.today.team.split("")
-                            .map(letter => (teams[letter]))
-                            .map(name => (<li style={{fontSize: 48, fontWeight: 400, margin: 0}} key={name}>{name}</li>))}
-                    </ul>
+                    {this.state.today.team !== 'N/A' ? 
+                        <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
+                            {this.state.today.team.split("")
+                                .filter(letter => letter !== 'N')
+                                .map(letter => (teams[letter]))
+                                .map(name => (<li style={{fontSize: 48, fontWeight: 400, margin: 0}} key={name}>{name}</li>))}
+                        </ul>
+                    : <span style={{fontSize: 48, fontWeight: 400, margin: 0}}>No teams working today</span>}
                 </span> <br />
             </div>
         )
@@ -110,7 +114,8 @@ export default class TodayComponent extends React.Component {
                         <div>
                             {formatDate(new Date())}
                             <span>{formatDate(new Date())}</span><br />
-                            {this.getWorkingTeams("Teams working next Monday:")}
+                            <span>Teams working next Monday:</span>
+                            {this.getWorkingTeams()}
                         </div>
                     }
                 </div>

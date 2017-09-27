@@ -1,5 +1,5 @@
 {
-    "serverip": "https://formal-grammar-179613.appspot.com",
+    "serverip": "http://localhost:8000",
     "teams": [
         "A: Asparagus",
         "B: Brussel Sprouts",
