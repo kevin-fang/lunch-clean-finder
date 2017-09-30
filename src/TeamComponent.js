@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetDatesByTeam } from './Api.js'
+import { SmallNotes, DateStyle, TeamStyle } from './Styles.js'
 
 // material-ui imports
 import {
@@ -113,21 +114,13 @@ export class TeamDisplayComponent extends React.Component {
     // create a table with the days
     makeTable = (days) => {
 		var today = new Date()
-		var smallNotes = {
-		}
-		var dateStyle = {
-			width: 70
-		}
-		var teamStyle = {
-			width: 20
-		}
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 					<TableRow>
-						<TableHeaderColumn style={dateStyle}>Date</TableHeaderColumn>
-						<TableHeaderColumn style={teamStyle}>Team</TableHeaderColumn>
-						<TableHeaderColumn style={smallNotes}>Notes</TableHeaderColumn>
+						<TableHeaderColumn style={DateStyle}>Date</TableHeaderColumn>
+						<TableHeaderColumn style={TeamStyle}>Team</TableHeaderColumn>
+						<TableHeaderColumn style={SmallNotes}>Notes</TableHeaderColumn>
 					</TableRow>
 				</TableHeader>
 				<TableBody displayRowCheckbox={false}>
@@ -137,9 +130,9 @@ export class TeamDisplayComponent extends React.Component {
 						}).map(day => {
 							return (
 								<TableRow key={day.date}>
-									<TableRowColumn style={dateStyle}>{day.date}</TableRowColumn>
-									<TableRowColumn style={teamStyle}>{day.team}</TableRowColumn>
-									<TableRowColumn style={smallNotes}>{day.notes}</TableRowColumn>
+									<TableRowColumn style={DateStyle}>{day.date}</TableRowColumn>
+									<TableRowColumn style={TeamStyle}>{day.team}</TableRowColumn>
+									<TableRowColumn style={SmallNotes}>{day.notes}</TableRowColumn>
 								</TableRow>
 							)
 						})

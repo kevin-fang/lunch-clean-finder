@@ -1,12 +1,18 @@
 import axios from 'axios'
 var config = require('./config.json')
 
-/**
- * 
- * @param {function} callback The callback to call after reaching the API
- */
-export const GetToday = (callback) => {
-    GetTeamsByDate(new Date(), callback)
+
+export const GetWeek = (callback) => {
+    var firstDate = new Date()
+    var friday = new Date()
+    friday.setDate(friday.getDate() + (12 - friday.getDay()) % 7)
+    var request = config.serverip + `/range?first=${firstDate.valueOf()}&second=${friday.valueOf()}`
+
+    axios.get(request)
+        .then(response => callback(response.data))
+        .catch(error => {
+            callback(null, error)
+        })
 }
 
 /**
