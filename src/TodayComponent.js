@@ -135,11 +135,12 @@ export default class TodayComponent extends React.Component {
     }
 
     getNextMonday = (date) => {
-        date.setHours(0)
-        date.setMinutes(0)
+        var monday = new Date(date.valueOf())
+        monday.setHours(0)
+        monday.setMinutes(0)
         // add 1 and then add a week, mod 7 to get the next monday
-        date.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7)
-        return date
+        monday.setDate(monday.getDate() + (1 + 7 - monday.getDay()) % 7)
+        return monday
     }
 
     // create a table with the days
