@@ -125,12 +125,11 @@ export default class TodayComponent extends React.Component {
             return <CircularProgress style={{ padding: 12 }} size={80} />
         } else if (this.state.weekend) {
             return (
-                <div style={{ padding: 24 }}>
+                <div style={{ padding: 24, textAlign: 'center', marginTop: 20 }}>
                     {this.state.today &&
                         <div>
-                            {formatDate(new Date())}
-                            <span>{formatDate(new Date())}</span><br />
-                            <span>Teams working next Monday:</span>
+                            <span>{formatDate(new Date())}</span>
+                            <span style={{ fontSize: 36 }}>Teams working next Monday:</span>
                             {this.getWorkingTeams()}
                         </div>
                     }
@@ -138,18 +137,16 @@ export default class TodayComponent extends React.Component {
             )
         }
         return (
-            <div>
-                <div style={{ padding: 12}}>
-                    {this.state.today
-                        ? <div style={{textAlign: 'center', marginTop: 20}}>
-                            {formatDate(new Date())}
-                            {this.state.weekend === false && this.getWorkingTeams("Working Today")}
-                        </div>
-                        : <div>
-                            <CircularProgress style={{ padding: 12 }} size={80} /><br />
-                        </div>
-                    }
-                </div>
+            <div style={{ padding: 12}}>
+                {this.state.today
+                    ? <div style={{textAlign: 'center', marginTop: 20}}>
+                        {formatDate(new Date())}
+                        {this.state.weekend === false && this.getWorkingTeams("Working Today")}
+                    </div>
+                    : <div>
+                        <CircularProgress style={{ padding: 12 }} size={80} /><br />
+                    </div>
+                }
             </div>
         )
     }
