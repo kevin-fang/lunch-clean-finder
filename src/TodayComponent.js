@@ -174,8 +174,9 @@ export default class TodayComponent extends React.Component {
     }
 
     render = () => {
+        console.log(this.state)
         // if today is the weekend, check next monday and display that
-        if (this.state.weekend && this.state.today === undefined) {
+        if (this.state.today === null) {
             return <CircularProgress style={{ padding: 12 }} size={80} />
         } else if (this.state.weekend) {
             return (
