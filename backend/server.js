@@ -18,24 +18,20 @@ function log(msg) {
 }
 
 /**
- * Return the team working today - DEPRECATED; please call /date?month=[]&day=[]&year=[]
+ * Get the ranges
+ * /range?first=[...]&second=[...]
+ * Make sure queries are in milliseconds, as in Date.valueOf()
  */
-app.get('/today', (req, res) => {
-    log("Request for today - DEPRECATED - please use /date with today's date.")
+app.get('/range', (req, res) => {
+    log("Request for date range: " + req.query.first + " to " + req.query.second)
+    var firstDate = new Date(new Number(req.query.first))
+    var secondDate = new Date(new Number(req.query.second))
     res.setHeader('Content-Type', 'text/json')
-    var today = new Date('9/16/2017')
-    if (today.getDay() === 0) {
-        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
-    } else if (today.getDay() === 6) {
-        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
-    } else {
-        api.getByDate(auth, today).then((response) => {
-            res.send(JSON.stringify(response[0]))
-        }).catch((err) => {
-            res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
-            console.log(err)
-        })
-    }
+    api.getDateRange(auth, firstDate, secondDate).then(response => {
+        res.send(JSON.stringify(response))
+    }).catch(err => {
+        res.send(JSON.stringify({ error: err}))
+    })
 })
 
 /**
@@ -59,7 +55,7 @@ app.get('/date', (req, res) => {
             response[0].weekend = false
             res.send(JSON.stringify(response[0]))
         }).catch(err => {
-            res.send(JSON.stringify({error: "date not found", date: JSON.stringify(date)}))
+            res.send(JSON.stringify({ error: "date not found", date: JSON.stringify(date) }))
         })
     }
 })
@@ -96,6 +92,26 @@ app.get('/jobbyname/:first/:last', (req, res) => {
                 ))
             console.log(err)
         })
+})
+
+/**
+ * Return the team working today - DEPRECATED; please call /date?month=[]&day=[]&year=[]
+ */
+app.get('/today', (req, res) => {
+    log("Request for today - DEPRECATED - please use /date with today's date.")
+    res.setHeader('Content-Type', 'text/json')
+    if (today.getDay() === 0) {
+        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
+    } else if (today.getDay() === 6) {
+        res.send(JSON.stringify({error: "Weekend", day: "Sunday"}))
+    } else {
+        api.getByDate(auth, today).then((response) => {
+            res.send(JSON.stringify(response[0]))
+        }).catch((err) => {
+            res.send(JSON.stringify({error: "Date not found", date: JSON.stringify(today)}))
+            console.log(err)
+        })
+    }
 })
 
 // get an authorization key from Google OAuth

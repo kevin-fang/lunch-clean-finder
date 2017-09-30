@@ -16,7 +16,8 @@ module.exports = {
 	getByDate: getByDate,
 	getByTeam: getByTeam,
 	getJobByName: getJobByName,
-	getByName: getByName
+	getByName: getByName,
+	getDateRange: getDateRange
 }
 
 // turn a person row into an object
@@ -38,6 +39,38 @@ const objectifyTeamRow = (row) => {
 		notes: row[2],
 		team: row[3]
 	}
+}
+
+/**
+ * Get all the jobs in a specific week
+ * @param {any} auth
+ * @param {Date} date Date of the Monday to receive
+ */
+function getDateRange(auth, firstDate, secondDate) {
+	firstDate = firstDate.withoutTime()
+	secondDate = secondDate.withoutTime()
+	return new Promise((resolve, reject) => {
+		sheets.spreadsheets.values.get({
+			auth: auth,
+			spreadsheetId: SPREADSHEET_ID,
+			range: "Lunch Cleanup Schedule!A:D"
+		}, (err, response) => {
+			if (err) {
+				reject(err)
+			} else if (response === null) {
+				reject("Failed to reach cleanup schedule spreadsheet.")
+			}
+			var responses = response.values.filter(row => {
+				return row !== [] && row[0] !== "DATE" && row[0] !== ""
+			}).filter(row => {
+				var checkingDate = new Date(row[0]).withoutTime()
+				return checkingDate >= firstDate && checkingDate <= secondDate
+			}).reduce((days, row) => {
+				return days.concat([row])
+			}, [])
+			resolve(responses)
+		})
+	})
 }
 
 /** 
