@@ -66,7 +66,7 @@ export default class TodayComponent extends React.Component {
 
     // call the API for today's date
     componentDidMount = () => {
-        if (this.today.getDay !== 0 && this.today.getDay() !== 6) {
+        if (this.today.getDay() !== 0 && this.today.getDay() !== 6) {
             GetTeamsByDate(this.today, (response, err) => {
                 if (err) {
                     console.log("Teams by date: " + err)
