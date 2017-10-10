@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetJobByName, GetDatesByTeam } from './Api.js'
 import { SmallNotes, DateStyle, TeamStyle } from './Styles.js'
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 
 // material-ui imports
 import {
@@ -149,8 +150,8 @@ export class NameDisplayComponent extends React.Component {
 	}
 
 	getWorkingTodayDisplay = () => {
-		const workingToday = <div style={{fontSize: 28}}>You are working today</div>
-		const notWorkingToday = <div style={{fontSize: 28}}>You are not working today</div>
+		const workingToday = <div>You are working today</div>
+		const notWorkingToday = <div>You are not working today</div>
 		if (this.state.workingToday) { // if simply working today, display so
 			return workingToday
 		} else if (this.state.job.job === "Recess Cleanup") { // if recess cleanup, then need to check if today is the specific weekday
@@ -176,13 +177,23 @@ export class NameDisplayComponent extends React.Component {
 				<div>
 					{
 						this.state.error !== "" ? this.state.error : 
-						<div>
-							{this.getWorkingTodayDisplay()}<br/>
-							{this.state.job.job !== "N/A"  && <div style={{fontSize: 18}}>Job: {this.state.job.job}<br/></div>}
-							{this.state.job.team !== "N/A"  && <div style={{fontSize: 18}}>Team: {this.state.job.team} on {this.state.job.day}<br/></div>}
-							
-							{(this.state.job.day !== "N/A" && !(this.state.job.team !== "N/A")) && <div style={{fontSize: 18}}>Day: {this.state.job.day}<br/></div>}
-						</div>
+						<Card style={{marginTop: 12, width: 240}}>
+							<CardTitle title = {
+								<b>
+								{this.state.name.first + " " + this.state.name.last}
+								</b>
+							}
+							subtitle={this.getWorkingTodayDisplay()}/>
+							<CardText style={{fontSize: 16}}>
+								{this.state.job.job !== "N/A"  && <div><b>Job:</b> {this.state.job.job}<br/></div>}
+								{this.state.job.team !== "N/A"  && <div><b>Team:</b> {this.state.job.team}<br/></div>}
+								
+								{(this.state.job.day !== "N/A") && 
+									<div>
+										<b>Day:</b> {this.state.job.day}<br/>
+									</div>}
+							</CardText>
+						</Card>
 					}
 				</div>
 			)
@@ -257,13 +268,11 @@ export class NameDisplayComponent extends React.Component {
 	render() {
 		return (
 			<div style={{padding: 24}}> 
-				<div style={{fontSize: 36}}>Welcome, {this.state.name.first + " " + this.state.name.last}</div>
 
 				{this.getDayDisplay()}<br/>
 				{	// only show next job dates if person is on lunch clean
 					this.state.notLunchClean === false && 
 						<div style={{fontSize: 16}}>
-							Next job dates:
 						</div>
 				}
 				{this.getJobDates()}<br/><br/>

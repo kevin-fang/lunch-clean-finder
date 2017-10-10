@@ -120,7 +120,7 @@ export default class TodayComponent extends React.Component {
                                 }
                             </ul>
 
-                        :   <span style={{ fontSize: 48, fontWeight: 400, margin: 0 }}>No teams working today</span>
+                        :   <span style={{ fontSize: 48, fontWeight: 400, margin: 0 }}>No teams working</span>
                     }
                     {/* display any notes from the spreadsheet if they exist*/}
                     { 
