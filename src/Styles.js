@@ -7,7 +7,8 @@ export const DateStyle = {
 }
 
 export const TeamStyle = {
-    width: 20
+    width: 20,
+    overflow: 'show'
 }
 
 export const DayStyle= {
