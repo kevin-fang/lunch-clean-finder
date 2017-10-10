@@ -1,6 +1,7 @@
 import React from 'react';
 import { GetTeamsByDate, GetWeek } from './Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle } from './Styles.js'
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 
 // material-ui imports
 import {

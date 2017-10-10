@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetDatesByTeam } from './Api.js'
 import { SmallNotes, DateStyle, TeamStyle } from './Styles.js'
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 
 // material-ui imports
 import {
@@ -141,23 +142,35 @@ export class TeamDisplayComponent extends React.Component {
 			</Table>
 		)
     }
+
+    getWorkingToday = () => {
+        if (this.state.workingToday) {
+            return "Working today" 
+        } else if (this.state.workingToday === false) {
+            return "Not working today"
+        } else {
+            return null
+        }
+    }
     
     render() {
         return (
-            <div style={{padding: 20}}>
-                {
-                    this.state.workingToday 
-                        ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is working today</span> 
-                        : this.state.workingToday === false ? <span style={{fontSize: 24}}>Team {config.teamNames[this.team]}, {this.day} is not working today</span> : null
-                }<br/><br/>
-                <span style={{fontSize: 18}}>Team: {config.teamNames[this.team]}</span><br/>
-                <span style={{fontSize: 18}}>Day: {this.day}</span><br/><br/>
-                {this.state.response 
-                    ?   <div>
-                            Next job dates:
-                            {this.makeTable(this.state.response.days)}
-                        </div>
-                    : <CircularProgress style={{padding: 36}} size={80}/>}
+            <div>
+                <Card style={{margin: 24, width: 240}}>
+                    <CardTitle title={<b>{config.teamNames[this.team]}</b>} 
+                        subtitle={ this.getWorkingToday() }
+                        />
+                    <CardText>
+                        <span style={{fontSize: 16}}><b>Day:</b> {this.day}</span>
+                    </CardText>
+                </Card>
+                <div style={{margin: 20}}>
+                    {this.state.response 
+                        ?   <div>
+                                {this.makeTable(this.state.response.days)}
+                            </div>
+                        : <CircularProgress style={{padding: 36}} size={80}/>}
+                </div>
             </div>
         )
     }
