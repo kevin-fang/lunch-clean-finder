@@ -1,7 +1,7 @@
 import React from 'react';
 import { GetTeamsByDate, GetWeek } from './Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle } from './Styles.js'
-import { Card, CardTitle, CardText } from 'material-ui/Card';
+import { Card, CardTitle, CardText } from 'material-ui/Card'
 
 // material-ui imports
 import {
@@ -46,7 +46,7 @@ function addSuffix(num) {
 
 // format a date. new Date('9/8/2017') => "It is Friday, September 8"
 function formatDate(date) {
-    var formattedDate = 
+    let formattedDate = 
         <div>
             <div>Today is {days[date.getDay()]}, {months[date.getMonth()]} {addSuffix(date.getDate())}</div>
         </div>
@@ -104,39 +104,54 @@ export default class TodayComponent extends React.Component {
     // returns the teams working on a specific date
     getWorkingTeams = (message) => {
         if (message === null || this.state.today === null) return;
+
+        let teamStyle = {
+            fontSize: 16, fontWeight: 400, margin: 0
+        }
+
+        // create a list of teams working today
+        let workingTeams
+        if (this.state.today.team !== 'N/A') {
+            workingTeams = this.state.today.team.split("")
+                .filter(letter => letter !== 'N')
+                .map(letter => (teams[letter]))
+                .map(name => (
+                        <li style={teamStyle} key={name}>{name}</li>
+                    )
+                )
+            workingTeams = (
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
+                    {workingTeams}
+                </ul>
+            )
+        } else {
+            workingTeams = <span style={teamStyle}>No teams working</span>
+        }
+
+        // display notes if they exist
+        let notes
+        if (this.state.today.notes !== "") {
+            notes = (
+                <div style={{ paddingTop: 24 }}>
+                    <span style={{ fontSize: 24 }}>{this.state.today.notes}</span>
+                </div>
+            )
+        } else {
+            notes = null
+        }
+
         return (
             <div>
-                <span style={{ fontSize: 18 }}><br/>
-                    {/* create a list of the teams working today*/}
-                    { this.state.today.team !== 'N/A' 
-                        ?   <ul style={{ listStyle: 'none', margin: 0, padding: 0}}>
-                                {
-                                    this.state.today.team.split("")
-                                        .filter(letter => letter !== 'N')
-                                        .map(letter => (teams[letter]))
-                                        .map(name => (
-                                                <li style={{ fontSize: 48, fontWeight: 400, margin: 0 }} key={name}>{name}</li>
-                                            )
-                                        )
-                                }
-                            </ul>
-
-                        :   <span style={{ fontSize: 48, fontWeight: 400, margin: 0 }}>No teams working</span>
-                    }
-                    {/* display any notes from the spreadsheet if they exist*/}
-                    { 
-                        this.state.today.notes !== "" && 
-                            <div style={{ paddingTop: 24 }}>
-                                <span style={{ fontSize: 24 }}>{this.state.today.notes}</span>
-                            </div>
-                    }
-                </span> <br />
+                <span>
+                    { workingTeams }
+                    { notes }
+                </span>
             </div>
         )
     }
 
     getNextMonday = (date) => {
-        var monday = new Date(date.valueOf())
+        let monday = new Date(date.valueOf())
         monday.setHours(0)
         monday.setMinutes(0)
         // add 1 and then add a week, mod 7 to get the next monday
@@ -146,7 +161,7 @@ export default class TodayComponent extends React.Component {
 
     // create a table with the days
     makeTable = (days) => {
-        return(
+        return (
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
@@ -178,28 +193,38 @@ export default class TodayComponent extends React.Component {
         // if today is the weekend, check next monday and display that
         if (this.state.weekend && this.state.today === undefined) {
             return <CircularProgress style={{ padding: 12 }} size={80} />
-        } else if (this.state.weekend) {
+        } else if (this.state.weekend) { // handle if weekend
             return (
-                <div style={{ padding: 24, textAlign: 'center', marginTop: 20 }}>
+                <div style={{ marginTop: 20 }}>
                     {this.state.today &&
                         <div>
-                            <span>{formatDate(this.today)}</span>
-                            <span style={{ fontSize: 36 }}>Teams working next Monday:</span>
-                            {this.getWorkingTeams()}
-                            {this.makeTable(this.state.week)}
+                            <span style={{ padding: 24, textAlign: 'center' }}>{formatDate(this.today)}</span>
+                            <Card style={{width: 240, marginTop: 24, marginLeft: '41%'}}>
+                                <CardTitle title={<b>Teams working next Monday</b>} />
+                                <CardText>
+                                    { this.getWorkingTeams() }
+                                </CardText>
+                            </Card><br/>
+                            <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
+                            <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
                         </div>
                     }
                 </div>
             )
         }
         return (
-            <div style={{ padding: 12}}>
-                {this.state.today
-                    ? <div style={{textAlign: 'center', marginTop: 20}}>
-                        {formatDate(this.today)}
-                        {this.state.weekend === false && this.getWorkingTeams("Working Today")}
-                        <span>Teams working this week:</span>
-                        {this.makeTable(this.state.week)}
+            <div>
+                {this.state.today // check if today is a date
+                    ? <div style={{ marginTop: 20 }}>
+                        <span style={{textAlign: 'center'}}>{formatDate(this.today)}</span>
+                        <Card style={{width: 240, marginTop: 24, marginLeft: '41%'}}>
+                            <CardTitle title={<b>Working Teams:</b>} />
+                            <CardText>
+                                { this.getWorkingTeams() }
+                            </CardText>
+                        </Card><br/>
+                        <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
+                        <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
                     </div>
                     : <div>
                         <CircularProgress style={{ padding: 12 }} size={80} /><br />

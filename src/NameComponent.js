@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { GetJobByName, GetDatesByTeam } from './Api.js'
 import { SmallNotes, DateStyle, TeamStyle } from './Styles.js'
-import { Card, CardTitle, CardText } from 'material-ui/Card';
+import { Card, CardTitle, CardText } from 'material-ui/Card'
 
 // material-ui imports
 import {
