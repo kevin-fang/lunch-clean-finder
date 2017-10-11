@@ -40,7 +40,7 @@ export class NameFormComponent extends React.Component {
 
 	// update whether the submit button is enabled
 	updateEnabled() {
-		let nameValidation = /^([a-z]|-)+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
+		let nameValidation = /^([a-z]|-| )+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
 		if (nameValidation.test(this.state.first) && nameValidation.test(this.state.last)) {
 			this.setState({canSubmit: true})
 		} else {
