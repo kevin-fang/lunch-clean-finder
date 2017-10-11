@@ -18,7 +18,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import RaisedButton from 'material-ui/RaisedButton'
 
 require('./util.js')
-var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satruday"]
+let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satruday"]
 
 // Form that takes name as input and submits it, redirecting to the NameDisplayComponent
 export class NameFormComponent extends React.Component {
@@ -40,7 +40,7 @@ export class NameFormComponent extends React.Component {
 
 	// update whether the submit button is enabled
 	updateEnabled() {
-		var nameValidation = /^([a-z]|-)+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
+		let nameValidation = /^([a-z]|-)+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
 		if (nameValidation.test(this.state.first) && nameValidation.test(this.state.last)) {
 			this.setState({canSubmit: true})
 		} else {
@@ -131,8 +131,8 @@ export class NameDisplayComponent extends React.Component {
 
 	// get the dates that a person works given the job
 	updateDates = () => {
-		var team = this.state.job.team.slice(0)
-		var day = this.state.job.day
+		let team = this.state.job.team.slice(0)
+		let day = this.state.job.day
 
 		// get the dates of a specific team that was found in the componentDidMount() function
 		GetDatesByTeam(day, team, (res, err) => {
@@ -155,7 +155,7 @@ export class NameDisplayComponent extends React.Component {
 		if (this.state.workingToday) { // if simply working today, display so
 			return workingToday
 		} else if (this.state.job.job === "Recess Cleanup") { // if recess cleanup, then need to check if today is the specific weekday
-			var today = new Date()
+			let today = new Date()
 			// compare if today is equal to the job provided by API
 			if (weekdays[today.getDay()] === this.state.job.day) {
 				return workingToday
@@ -227,7 +227,7 @@ export class NameDisplayComponent extends React.Component {
 				<TableBody displayRowCheckbox={false}>
 					{
 						days.filter(day => {
-							var today = new Date()
+							let today = new Date()
 							today.setHours(0, 0, 0, 0)
 							return new Date(day.date) >= today // only print dates after today
 						}).map(day => {
