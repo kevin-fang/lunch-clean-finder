@@ -101,7 +101,7 @@ export class TeamDisplayComponent extends React.Component {
             } else {
                 this.setState({response: res})
                 res.days.forEach((workingDay) => {
-					var testDate = new Date(workingDay.date)
+					let testDate = new Date(workingDay.date)
 					if (testDate.isToday()) {
 						this.setState({workingToday: true}, () => {return})
 					} else if (this.state.workingToday === null) {
@@ -114,7 +114,7 @@ export class TeamDisplayComponent extends React.Component {
 
     // create a table with the days
     makeTable = (days) => {
-		var today = new Date()
+		let today = new Date()
 		return(
 			<Table>
 				<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
