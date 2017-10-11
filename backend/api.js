@@ -156,6 +156,19 @@ function getJobByName(auth, name) {
 			range: 'Job Assignments (by Name)!A:E'
 		}, (err, response) => {
 			if (err) return reject(err)
+
+			// handle if there are multiple words in last name by capitalizing each one
+			name.last = name.last.split(" ")
+				.map(name => {
+					return name[0].toUpperCase() + name.slice(1)
+				})
+				.reduce((last, name) => {
+					return last + " " + name
+				}, "")
+				
+			// delete the first space, side effect of reduce
+			name.last = name.last.slice(1)
+
 			var job = response.values.filter((row) => {
 				return row.length === 5 && row[1] === name.first && row[0] === name.last
 			}).map((row) => {
