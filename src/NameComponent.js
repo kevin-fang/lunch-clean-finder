@@ -28,7 +28,8 @@ export class NameFormComponent extends React.Component {
 			first: "",
 			last: "",
 			redirect: false,
-			canSubmit: false
+			canSubmitFirst: false,
+			canSubmitLast: false
 		}
 		this.submit = this.submit.bind(this)
 		this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -41,17 +42,23 @@ export class NameFormComponent extends React.Component {
 	// update whether the submit button is enabled
 	updateEnabled() {
 		let nameValidation = /^([a-z]|-| )+([a-z]+)$/i // regex validation of name, including alphabet and hyphens
-		if (nameValidation.test(this.state.first) && nameValidation.test(this.state.last)) {
-			this.setState({canSubmit: true})
+		if (nameValidation.test(this.state.first)) {
+			this.setState({canSubmitFirst: true})
 		} else {
-			this.setState({canSubmit: false})
+			this.setState({canSubmitFirst: false})
+		}
+
+		if (nameValidation.test(this.state.last)) {
+			this.setState({canSubmitLast: true})
+		} else {
+			this.setState({canSubmitLast: false})
 		}
 	}
 
 	// handle enter key submit
 	handleKeyPress(e) {
 		if (e.key === 'Enter') {
-			if (this.state.canSubmit) {
+			if (this.state.canSubmitFirst && this.state.canSubmitLast) {
 				this.submit()
 			}
 		}
@@ -71,6 +78,13 @@ export class NameFormComponent extends React.Component {
 						value={this.state.first}
 						autoFocus={true}
 						style={{marginRight: 8}}
+						errorText={
+							this.state.canSubmitFirst === false && this.state.first !== "" ?
+							<div style={{color: 'red', marginBottom: 8}}>
+								First name is invalid
+							</div>
+							: null
+						}
 						onChange={event => {
 							this.setState({first: event.target.value}, () => {
 								this.updateEnabled()
@@ -79,6 +93,13 @@ export class NameFormComponent extends React.Component {
 					{/* Last name */}
 					<TextField hintText='Last Name' 
 						onKeyPress={this.handleKeyPress} 
+						errorText={
+							this.state.canSubmitLast === false && this.state.last !== "" ?
+								<div style={{color: 'red'}} >
+									Last name is invalid
+								</div>
+								: null
+						}
 						onChange={(event) => {
 							this.setState({last: event.target.value}, () => {
 								this.updateEnabled()
@@ -89,7 +110,7 @@ export class NameFormComponent extends React.Component {
 				{/* Submit button */}
 				<RaisedButton 
 					onClick={this.submit} 
-					disabled={!this.state.canSubmit}
+					disabled={!(this.state.canSubmitFirst && this.state.canSubmitLast)}
 					label="Check Jobs" 
 					secondary={true} />
 			</div>
