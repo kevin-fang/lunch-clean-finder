@@ -1,8 +1,8 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { NameDisplayComponent, NameFormComponent } from './NameComponent.js'
-import { TeamFormComponent, TeamDisplayComponent } from './TeamComponent.js'
-import TodayComponent from './TodayComponent.js'
+import { NameDisplayComponent, NameFormComponent } from './components/NameComponent.js'
+import { TeamFormComponent, TeamDisplayComponent } from './components/TeamComponent.js'
+import TodayComponent from './components/TodayComponent.js'
 
 
 export class Main extends React.Component {
