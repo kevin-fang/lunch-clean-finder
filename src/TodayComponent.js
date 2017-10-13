@@ -2,6 +2,7 @@ import React from 'react';
 import { GetTeamsByDate, GetWeek } from './Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle } from './Styles.js'
 import { Card, CardTitle, CardText } from 'material-ui/Card'
+import { CenterDiv } from './Styles.js'
 
 // material-ui imports
 import {
@@ -13,13 +14,7 @@ import {
     TableRowColumn,
 } from 'material-ui/Table'
 import CircularProgress from 'material-ui/CircularProgress'
-
-// list of the team names
-const teams = {
-    A: "A: Asparagus",
-    B: "B: Brussel Sprouts",
-    C: "C: Cauliflower"
-}
+var config = require('./config.json')
 
 // list of weekdays and months
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -114,7 +109,7 @@ export default class TodayComponent extends React.Component {
         if (this.state.today.team !== 'N/A') {
             workingTeams = this.state.today.team.split("")
                 .filter(letter => letter !== 'N')
-                .map(letter => (teams[letter]))
+                .map(letter => (config.teamNames[letter]))
                 .map(name => (
                         <li style={teamStyle} key={name}>{name}</li>
                     )
@@ -200,12 +195,14 @@ export default class TodayComponent extends React.Component {
                     {this.state.today &&
                         <div>
                             <span style={{ padding: 24, textAlign: 'center' }}>{formatDate(this.today)}</span>
-                            <Card style={{width: 240, marginTop: 24, marginLeft: '41%'}}>
-                                <CardTitle title={<b>Teams working next Monday</b>} />
-                                <CardText>
-                                    { this.getWorkingTeams() }
-                                </CardText>
-                            </Card><br/>
+                            <div style={ CenterDiv }>
+                                <Card style={{width: 240, marginTop: 24}}>
+                                    <CardTitle title={<b>Teams working next Monday</b>} />
+                                    <CardText>
+                                        { this.getWorkingTeams() }
+                                    </CardText>
+                                </Card><br/>
+                            </div>
                             <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
                             <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
                         </div>
@@ -217,13 +214,15 @@ export default class TodayComponent extends React.Component {
             <div>
                 {this.state.today // check if today is a date
                     ? <div style={{ marginTop: 20 }}>
-                        <span style={{textAlign: 'center'}}>{formatDate(this.today)}</span>
-                        <Card style={{width: 240, marginTop: 24, marginLeft: '41%'}}>
-                            <CardTitle title={<b>Working Teams:</b>} />
-                            <CardText>
-                                { this.getWorkingTeams() }
-                            </CardText>
-                        </Card><br/>
+                        <span style={{ textAlign: 'center' }}>{formatDate(this.today)}</span>
+                        <div style={ CenterDiv }>
+                            <Card style={{width: 240, marginTop: 24}}>
+                                <CardTitle title={<b>Working Teams:</b>} />
+                                <CardText>
+                                    { this.getWorkingTeams() }
+                                </CardText>
+                            </Card><br/>
+                        </div>
                         <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
                         <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
                     </div>
