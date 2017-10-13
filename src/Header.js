@@ -81,8 +81,9 @@ export default class Header extends React.Component {
                         <ul style={{padding: 8, margin: 4}}>
                             <li><b>React.js</b>, v15.6.1</li>
                             <li><b>Node.js</b>, v7.8.0</li>
-                            <li><a href="https://github.com/kevin-fang/student-jobs-finder" target="_blank" rel="noopener noreferrer">Source code avaliable on GitHub</a></li>
-                        </ul>
+                        </ul>                            
+                        <a href="https://github.com/kevin-fang/student-jobs-finder" target="_blank" rel="noopener noreferrer">Source code available on GitHub</a>
+
                 </Dialog>
                 {/* Create the navigation menu */}
                 <Drawer

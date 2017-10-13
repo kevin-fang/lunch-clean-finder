@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetTeamsByDate, GetWeek, GetNextWeek, GetThisAndNextWeek } from './Api.js'
+import { GetTeamsByDate, GetThisAndNextWeek } from './Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle } from './Styles.js'
 import { Card, CardTitle, CardText } from 'material-ui/Card'
 import { CenterDiv } from './Styles.js'
@@ -59,7 +59,7 @@ export default class TodayComponent extends React.Component {
             nextWeek: null
         }
         this.today = new Date()
-    }
+    }   
 
     // call the API for today's date
     componentDidMount = () => {
