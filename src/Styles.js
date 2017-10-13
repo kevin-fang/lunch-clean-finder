@@ -11,6 +11,11 @@ export const TeamStyle = {
     overflow: 'show'
 }
 
-export const DayStyle= {
+export const DayStyle = {
     width: 70
+}
+
+export const CenterDiv = {
+	display: 'flex',
+	justifyContent: 'center'
 }
