@@ -1,12 +1,60 @@
 import axios from 'axios'
-var config = require('./config.json')
+let config = require('./config.json')
 
+// returns this and next week through a call to the API - just reduces the amount of API calls needed for TodayComponent
+export const GetThisAndNextWeek = (callback) => {
+    let today = new Date()
 
-export const GetWeek = (callback) => {
-    var firstDate = new Date()
-    var friday = new Date()
+    // find this friday
+    let friday = new Date(today.valueOf())
     friday.setDate(friday.getDate() + (12 - friday.getDay()) % 7)
-    var request = config.serverip + `/range?first=${firstDate.valueOf()}&second=${friday.valueOf()}`
+
+    // add 3 days to that to get next monday
+    let nextMonday = new Date(friday.valueOf())
+    nextMonday.setDate(nextMonday.getDate() + 3) // add 3 days to friday, making it monday
+
+    // find friday after that
+    let nextFriday = new Date(nextMonday.valueOf())
+    nextFriday.setDate(nextFriday.getDate() + (12 - nextFriday.getDay()) % 7)
+
+    let request = config.serverip + `/range?first=${today.valueOf()}&second=${nextFriday.valueOf()}`
+
+    axios.get(request)
+        .then(response => callback(response.data))
+        .catch(error => {
+            callback(null, error)
+        })
+}
+
+// return the jobs for this week
+export const GetWeek = (callback) => {
+    let firstDate = new Date()
+    let friday = new Date(firstDate.valueOf())
+    friday.setDate(friday.getDate() + (12 - friday.getDay()) % 7)
+    let request = config.serverip + `/range?first=${firstDate.valueOf()}&second=${friday.valueOf()}`
+
+    axios.get(request)
+        .then(response => callback(response.data))
+        .catch(error => {
+            callback(null, error)
+        })
+}
+
+// returns the jobs for next week
+export const GetNextWeek = (callback) => {
+    // find this friday
+    let friday = new Date()
+    friday.setDate(friday.getDate() + (12 - friday.getDay()) % 7)
+
+    // add 3 days to that to get next monday
+    let nextMonday = new Date(friday.valueOf())
+    nextMonday.setDate(nextMonday.getDate() + 3) // add 3 days to friday, making it monday
+
+    // find friday after that
+    let nextFriday = new Date(nextMonday.valueOf())
+    nextFriday.setDate(nextFriday.getDate() + (12 - nextFriday.getDay()) % 7)
+
+    let request = config.serverip + `/range?first=${nextMonday.valueOf()}&second=${nextFriday.valueOf()}`
 
     axios.get(request)
         .then(response => callback(response.data))
@@ -21,7 +69,7 @@ export const GetWeek = (callback) => {
  * @param {function} callback Callback after reaching API
  */
 export const GetTeamsByDate = (date, callback) => {
-    var request = config.serverip + `/date?month=${date.getMonth() + 1}&day=${date.getDate()}&year=${date.getFullYear()}`
+    let request = config.serverip + `/date?month=${date.getMonth() + 1}&day=${date.getDate()}&year=${date.getFullYear()}`
     axios.get(request)
         .then(response => callback(response.data))
         .catch(error => {

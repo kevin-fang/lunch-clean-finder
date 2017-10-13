@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetTeamsByDate, GetWeek } from './Api.js'
+import { GetTeamsByDate, GetWeek, GetNextWeek, GetThisAndNextWeek } from './Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle } from './Styles.js'
 import { Card, CardTitle, CardText } from 'material-ui/Card'
 import { CenterDiv } from './Styles.js'
@@ -55,7 +55,8 @@ export default class TodayComponent extends React.Component {
         this.state = {
             today: null,
             weekend: false,
-            week: null
+            week: null,
+            nextWeek: null
         }
         this.today = new Date()
     }
@@ -76,11 +77,23 @@ export default class TodayComponent extends React.Component {
             })
         }
 
-        GetWeek((response, err) => {
+        GetThisAndNextWeek((response, err) => {
             if (err) {
                 console.log("Get week: " + err)
             } else if (response) {
-                this.setState({ week: response })
+                // find next friday to be used for comparison
+                let friday = new Date()
+                friday.setDate(friday.getDate() + (12 - friday.getDay()) % 7)
+
+                let thisWeek = response.filter(arr => (
+                    new Date(arr[0]).valueOf() < friday.valueOf()
+                ))
+
+                let nextWeek = response.filter(arr => (
+                    new Date(arr[0]).valueOf() > friday.valueOf()
+                ))
+
+                this.setState({ week: thisWeek, nextWeek: nextWeek})
             }
         })
     }
@@ -189,48 +202,35 @@ export default class TodayComponent extends React.Component {
         // if today is the weekend, check next monday and display that
         if (this.state.today === null) {
             return <CircularProgress style={{ padding: 12 }} size={80} />
-        } else if (this.state.weekend) { // handle if weekend
+        } else {
             return (
-                <div style={{ marginTop: 20 }}>
-                    {this.state.today &&
-                        <div>
-                            <span style={{ padding: 24, textAlign: 'center' }}>{formatDate(this.today)}</span>
+                <div>
+                    {this.state.today || this.state.weekend // check if today is a date
+                        ? <div style={{ marginTop: 20 }}>
+                            <span style={{ textAlign: 'center' }}>{formatDate(this.today)}</span>
                             <div style={ CenterDiv }>
                                 <Card style={{width: 240, marginTop: 24}}>
-                                    <CardTitle title={<b>Teams working next Monday</b>} />
+                                    <CardTitle title={<b>{this.state.weekend ? "Next Monday:" : "Working Teams:"}</b>} />
                                     <CardText>
                                         { this.getWorkingTeams() }
                                     </CardText>
                                 </Card><br/>
                             </div>
                             <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
-                            <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
+                            <div style={{paddingLeft: 24, paddingBottom: 24}}>{this.makeTable(this.state.week)}</div>
+                            { this.state.nextWeek &&
+                                <div>
+                                    <span style={{margin: 20, marginTop: 20}}><b>Next week:</b></span>
+                                    <div style={{paddingLeft: 24}}>{this.makeTable(this.state.nextWeek)}</div>
+                                </div>
+                            }
+                        </div>
+                        : <div>
+                            <CircularProgress style={{ padding: 12 }} size={80} /><br />
                         </div>
                     }
                 </div>
             )
         }
-        return (
-            <div>
-                {this.state.today // check if today is a date
-                    ? <div style={{ marginTop: 20 }}>
-                        <span style={{ textAlign: 'center' }}>{formatDate(this.today)}</span>
-                        <div style={ CenterDiv }>
-                            <Card style={{width: 240, marginTop: 24}}>
-                                <CardTitle title={<b>Working Teams:</b>} />
-                                <CardText>
-                                    { this.getWorkingTeams() }
-                                </CardText>
-                            </Card><br/>
-                        </div>
-                        <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
-                        <div style={{padding: 24}}>{this.makeTable(this.state.week)}</div>
-                    </div>
-                    : <div>
-                        <CircularProgress style={{ padding: 12 }} size={80} /><br />
-                    </div>
-                }
-            </div>
-        )
     }
 }
