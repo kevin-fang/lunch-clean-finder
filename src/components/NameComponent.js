@@ -251,7 +251,9 @@ export class NameDisplayComponent extends React.Component {
 							let today = new Date()
 							today.setHours(0, 0, 0, 0)
 							return new Date(day.date) >= today // only print dates after today
-						}).map(day => {
+						}).filter(day => {
+                            return !day.notes.includes('SCHEDULE')
+                        }).map(day => {
 							return (
 								<TableRow key={day.date}>
 									<TableRowColumn style={DateStyle}>{day.date}</TableRowColumn>
@@ -286,10 +288,14 @@ export class NameDisplayComponent extends React.Component {
 		}
 	}
 
+	getWarning = () => {
+		return <div style={{color: 'red'}}>Important: this page does not reflect day changes. Check the main page instead.</div>
+	}
+
 	render() {
 		return (
 			<div style={{padding: 24}}> 
-
+				{this.state.response !== null ? this.getWarning() : null}<br/>
 				{this.getDayDisplay()}<br/>
 				{	// only show next job dates if person is on lunch clean
 					this.state.notLunchClean === false && 

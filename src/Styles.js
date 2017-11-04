@@ -1,5 +1,5 @@
 export const SmallNotes = {
-
+    overflow: 'show'
 }
 
 export const DateStyle = {

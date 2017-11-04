@@ -208,13 +208,13 @@ export default class TodayComponent extends React.Component {
                         ? <div style={{ marginTop: 20 }}>
                             <span style={{ textAlign: 'center' }}>{formatDate(this.today)}</span>
                             <div style={ CenterDiv }>
-                                <Card style={{width: 240, marginTop: 24}}>
+                                <Card style={{width: 240, marginTop: 24, paddingBottom: 10}}>
                                     <CardTitle title={<b>{this.state.weekend ? "Next Monday:" : "Working Teams:"}</b>} />
                                     <CardText>
                                         { this.getWorkingTeams() }
                                     </CardText>
                                 </Card><br/>
-                            </div>
+                            </div><br/>
                             <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
                             <div style={{paddingLeft: 24, paddingBottom: 24}}>{this.makeTable(this.state.week)}</div>
                             { this.state.nextWeek &&
