@@ -171,9 +171,9 @@ export default class TodayComponent extends React.Component {
     makeTable = (days) => {
         return (
             <Table
-                bodyStyle={{overflowX: 'auto'}}>
+                bodyStyle={{overflow: 'auto'}}>
                 <TableHeader 
-                    displaySelectAll={false} 
+                    displaySelectAll={false}
                     adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn style={DateStyle}>Date</TableHeaderColumn>
@@ -182,8 +182,7 @@ export default class TodayComponent extends React.Component {
                         <TableHeaderColumn style={SmallNotes}>Notes</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody displayRowCheckbox={false}
-                    style={{overflowX: 'auto'}}>
+                <TableBody displayRowCheckbox={false}>
                     {
                         days.map(day => {
                             return (
@@ -223,13 +222,13 @@ export default class TodayComponent extends React.Component {
                             </div><br/>
                             <Paper style={{margin: 20, paddingTop: 20}}>
                                 <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
-                                <div style={{paddingLeft: 12, paddingBottom: 24}}>{this.makeTable(this.state.week)}</div>
+                                <div style={{paddingLeft: 12, paddingRight: 12}}>{this.makeTable(this.state.week)}</div>
                             </Paper>
                                 { this.state.nextWeek &&
                                     <Paper style={{margin: 20, paddingTop: 20}}>
                                         <div>
                                             <span style={{margin: 20, marginTop: 20}}><b>Next week:</b></span>
-                                            <div style={{paddingLeft: 24}}>{this.makeTable(this.state.nextWeek)}</div>
+                                            <div style={{paddingLeft: 12, paddingRight: 12}}>{this.makeTable(this.state.nextWeek)}</div>
                                         </div>
                                     </Paper>
                                 }

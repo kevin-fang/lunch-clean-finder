@@ -12,7 +12,7 @@ export const TeamStyle = {
 }
 
 export const DayStyle = {
-    width: 70
+    width: 67
 }
 
 export const CenterDiv = {
