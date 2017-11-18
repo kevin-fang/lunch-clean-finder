@@ -2,6 +2,7 @@ import React from 'react';
 import { GetTeamsByDate, GetThisAndNextWeek } from '../Api.js'
 import { SmallNotes, DateStyle, DayStyle, TeamStyle, CenterDiv } from '../Styles.js'
 import { Card, CardTitle, CardText } from 'material-ui/Card'
+import Paper from 'material-ui/Paper'
 
 // material-ui imports
 import {
@@ -169,8 +170,11 @@ export default class TodayComponent extends React.Component {
     // create a table with the days
     makeTable = (days) => {
         return (
-            <Table>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <Table
+                bodyStyle={{overflowX: 'auto'}}>
+                <TableHeader 
+                    displaySelectAll={false} 
+                    adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn style={DateStyle}>Date</TableHeaderColumn>
                         <TableHeaderColumn style={DayStyle}>Day</TableHeaderColumn>
@@ -178,7 +182,8 @@ export default class TodayComponent extends React.Component {
                         <TableHeaderColumn style={SmallNotes}>Notes</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody displayRowCheckbox={false}>
+                <TableBody displayRowCheckbox={false}
+                    style={{overflowX: 'auto'}}>
                     {
                         days.map(day => {
                             return (
@@ -207,22 +212,27 @@ export default class TodayComponent extends React.Component {
                     {this.state.today || this.state.weekend // check if today is a date
                         ? <div style={{ marginTop: 20 }}>
                             <span style={{ textAlign: 'center' }}>{formatDate(this.today)}</span>
-                            <div style={ CenterDiv }>
-                                <Card style={{width: 240, marginTop: 24, paddingBottom: 10}}>
+
+                            <div style={{ display: 'flex' }}>
+                                <Card style={{width: 240,margin: 'auto', marginTop: 24, }}>
                                     <CardTitle title={<b>{this.state.weekend ? "Next Monday:" : "Working Teams:"}</b>} />
                                     <CardText>
                                         { this.getWorkingTeams() }
                                     </CardText>
                                 </Card><br/>
                             </div><br/>
-                            <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
-                            <div style={{paddingLeft: 24, paddingBottom: 24}}>{this.makeTable(this.state.week)}</div>
-                            { this.state.nextWeek &&
-                                <div>
-                                    <span style={{margin: 20, marginTop: 20}}><b>Next week:</b></span>
-                                    <div style={{paddingLeft: 24}}>{this.makeTable(this.state.nextWeek)}</div>
-                                </div>
-                            }
+                            <Paper style={{margin: 20, paddingTop: 20}}>
+                                <span style={{margin: 20, marginTop: 20}}><b>This week:</b></span>
+                                <div style={{paddingLeft: 12, paddingBottom: 24}}>{this.makeTable(this.state.week)}</div>
+                            </Paper>
+                                { this.state.nextWeek &&
+                                    <Paper style={{margin: 20, paddingTop: 20}}>
+                                        <div>
+                                            <span style={{margin: 20, marginTop: 20}}><b>Next week:</b></span>
+                                            <div style={{paddingLeft: 24}}>{this.makeTable(this.state.nextWeek)}</div>
+                                        </div>
+                                    </Paper>
+                                }
                         </div>
                         : <div>
                             <CircularProgress style={{ padding: 12 }} size={80} /><br />

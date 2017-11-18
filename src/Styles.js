@@ -16,6 +16,5 @@ export const DayStyle = {
 }
 
 export const CenterDiv = {
-	display: 'flex',
-	justifyContent: 'center'
+	display: 'flex'
 }
