@@ -102,7 +102,9 @@ export default class TodayComponent extends React.Component {
     fixWeekendDate = (date) => {
         GetTeamsByDate(date, (response, err) => {
             if (err) {
-                console.log("Fix weekend date: " + err)
+                console.log("Fix weekend date: " + err + ", response: " + response)
+                //alert("Messed up!")
+                this.setState({ today: "failed" })
             } else if (response) {
                 this.setState({ today: response, weekend: true })
             }
@@ -205,6 +207,17 @@ export default class TodayComponent extends React.Component {
         // if today is the weekend, check next monday and display that
         if (this.state.today === null) {
             return <CircularProgress style={{ padding: 12 }} size={80} />
+        } else if (this.state.today === "failed") {
+            return (
+                <div style={{ display: 'flex' }}>
+                    <Card style={{width: 240,margin: 'auto', marginTop: 24, }}>
+                        <CardTitle title={<b>No teams working!</b>} />
+                        <CardText>
+                            Winter break!
+                        </CardText>
+                    </Card><br/>
+                </div>
+            )
         } else {
             return (
                 <div>
