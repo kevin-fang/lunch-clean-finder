@@ -65,10 +65,12 @@ export default class TodayComponent extends React.Component {
     componentDidMount = () => {
         if (this.today.getDay() !== 0 && this.today.getDay() !== 6) {
             GetTeamsByDate(this.today, (response, err) => {
-                if (err) {
+                console.log("component response: ", response, "today: ", this.state.today)
+                if (response === null) {
                     console.log("Teams by date: " + err)
+                    //this.setState({ today: "failed" })
                 } else if (response) {
-                    this.setState({ today: response, weekend: false })
+                    this.setState({ today: response.data, weekend: false })
                 }
             })
         } else {
@@ -101,10 +103,11 @@ export default class TodayComponent extends React.Component {
     // call the api on the Monday if today is Saturday/Sunday
     fixWeekendDate = (date) => {
         GetTeamsByDate(date, (response, err) => {
+            console.log("fix weekend")
             if (err) {
                 console.log("Fix weekend date: " + err + ", response: " + response)
                 //alert("Messed up!")
-                this.setState({ today: "failed" })
+                //this.setState({ today: "failed" })
             } else if (response) {
                 this.setState({ today: response, weekend: true })
             }
