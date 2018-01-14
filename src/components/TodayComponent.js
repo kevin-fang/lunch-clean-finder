@@ -82,6 +82,7 @@ export default class TodayComponent extends React.Component {
         GetThisAndNextWeek((response, err) => {
             if (err) {
                 console.log("Get week: " + err)
+                this.setState({ today: 'failed' })
             } else if (response) {
                 // find next friday to be used for comparison
                 let friday = new Date()
@@ -107,7 +108,7 @@ export default class TodayComponent extends React.Component {
             if (err) {
                 console.log("Fix weekend date: " + err + ", response: " + response)
                 //alert("Messed up!")
-                //this.setState({ today: "failed" })
+                this.setState({ today: "failed" })
             } else if (response) {
                 this.setState({ today: response, weekend: true })
             }
@@ -214,9 +215,9 @@ export default class TodayComponent extends React.Component {
             return (
                 <div style={{ display: 'flex' }}>
                     <Card style={{width: 240,margin: 'auto', marginTop: 24, }}>
-                        <CardTitle title={<b>No teams working!</b>} />
+                        <CardTitle title={<b>Midyear Exams</b>} />
                         <CardText>
-                            Winter break!
+                            Please see the page in Dartmouth Lobby for jobs.<br/>Most likely, B and C are working.
                         </CardText>
                     </Card><br/>
                 </div>
