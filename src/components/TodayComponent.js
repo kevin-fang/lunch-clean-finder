@@ -62,17 +62,17 @@ export default class TodayComponent extends React.Component {
     }   
 
     // call the API for today's date
-    componentDidMount = () => {
+    componentWillMount = () => {
         if (this.today.getDay() !== 0 && this.today.getDay() !== 6) {
             GetTeamsByDate(this.today, (response, err) => {
-                console.log("component response: ", response, "today: ", this.state.today)
                 if (response === null) {
-                    console.log("Teams by date: " + err)
                     //this.setState({ today: "failed" })
                 } else if (response) {
                     this.setState({ today: response.data, weekend: false })
                 }
             })
+
+
         } else {
             this.setState({ weekend: true }, () => {
                 this.fixWeekendDate(this.getNextMonday(this.today))
@@ -82,7 +82,7 @@ export default class TodayComponent extends React.Component {
         GetThisAndNextWeek((response, err) => {
             if (err) {
                 console.log("Get week: " + err)
-                this.setState({ today: 'failed' })
+                //this.setState({ today: 'failed' })
             } else if (response) {
                 // find next friday to be used for comparison
                 let friday = new Date()
@@ -99,18 +99,18 @@ export default class TodayComponent extends React.Component {
                 this.setState({ week: thisWeek, nextWeek: nextWeek})
             }
         })
+    
     }
 
     // call the api on the Monday if today is Saturday/Sunday
     fixWeekendDate = (date) => {
         GetTeamsByDate(date, (response, err) => {
-            console.log("fix weekend")
             if (err) {
-                console.log("Fix weekend date: " + err + ", response: " + response)
                 //alert("Messed up!")
-                this.setState({ today: "failed" })
+                //this.setState({ today: "failed" })
+                
             } else if (response) {
-                this.setState({ today: response, weekend: true })
+                this.setState({ today: response.data, weekend: true })
             }
         })
     }
@@ -175,6 +175,7 @@ export default class TodayComponent extends React.Component {
 
     // create a table with the days
     makeTable = (days) => {
+        if (days === null) return
         return (
             <Table
                 bodyStyle={{overflow: 'auto'}}>
@@ -215,9 +216,9 @@ export default class TodayComponent extends React.Component {
             return (
                 <div style={{ display: 'flex' }}>
                     <Card style={{width: 240,margin: 'auto', marginTop: 24, }}>
-                        <CardTitle title={<b>Midyear Exams</b>} />
+                        <CardTitle title={<b>Project Week</b>} />
                         <CardText>
-                            Please see the page in Dartmouth Lobby for jobs.<br/>Most likely, B and C are working.
+                            No jobs!
                         </CardText>
                     </Card><br/>
                 </div>
