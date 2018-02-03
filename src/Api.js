@@ -70,11 +70,8 @@ export const GetNextWeek = (callback) => {
  */
 export const GetTeamsByDate = (date, callback) => {
     let request = config.serverip + `/date?month=${date.getMonth() + 1}&day=${date.getDate()}&year=${date.getFullYear()}`
-    console.log("get teams by date is being called")
     axios.get(request)
         .then(response => {
-            //console.log("SUCCESSFUL")
-            console.log(response)
             callback(response, null)
         })
 }

@@ -81,7 +81,7 @@ export default class TodayComponent extends React.Component {
 
         GetThisAndNextWeek((response, err) => {
             if (err) {
-                console.log("Get week: " + err)
+                console.log("Website encountered a bug: " + err)
                 //this.setState({ today: 'failed' })
             } else if (response) {
                 // find next friday to be used for comparison
@@ -216,9 +216,9 @@ export default class TodayComponent extends React.Component {
             return (
                 <div style={{ display: 'flex' }}>
                     <Card style={{width: 240,margin: 'auto', marginTop: 24, }}>
-                        <CardTitle title={<b>Project Week</b>} />
+                        <CardTitle title={<b>Website failed.</b>} />
                         <CardText>
-                            No jobs!
+                            Please contact Kevin at kfang@commschool.org
                         </CardText>
                     </Card><br/>
                 </div>
