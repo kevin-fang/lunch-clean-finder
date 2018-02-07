@@ -1,6 +1,6 @@
 {
     "port": 8000,
-    "spreadsheetId": "1B76OlSg89RewEB6GwJoiOVbIjiu_WV6IPI4soE_-aiw",
+    "spreadsheetId": "1LS9pTZ2C--MMZp-NqJcSPJUnPi7bAjiO",
     "tokenDir": "./.credentials/",
     "tokenName": "lunch-clean-finder-token.json"
 }
